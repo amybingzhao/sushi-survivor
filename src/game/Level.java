@@ -11,20 +11,22 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
-public class Level {
+public abstract class Level {
 	public static int NUM_SPRITES_PER_TYPE;
 	public static final int CANVAS_WIDTH = 1024;
 	public static final int CANVAS_HEIGHT = 512;
 	public static final long levelDuration = 2*1000;
-	public static long updateDuration = 200;
-	private Timer updateTimer;
-	public GraphicsContext gc;
+	public static long myUpdateDuration = 200;
+	private Timer myUpdateTimer;
+	public GraphicsContext myGc;
+	public Scene myScene;
 	
 	public void init(Stage stage) {
-		initUpdateTimer();
+		//initUpdateTimer();
+		System.out.println("update timer inited");
 		Group root = new Group();
-		Scene scene = initScene(root);
-		//generateSprites();
+		initScene(root);
+		//populateSceneWithSprites();
 		
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -35,34 +37,36 @@ public class Level {
 			}
 		}.start();
 		
-		stage.setScene(scene);
+		stage.setScene(myScene);
 	}
 	
+	public Scene getScene() {
+		return myScene;
+	}
+	
+	// TODO: update timer method isnt working 
 	private void initUpdateTimer() {
-		updateTimer.schedule(new TimerTask() {
+		System.out.println("hi");
+		myUpdateTimer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				this.handleTimer();
+				// want to increase game speed
+				System.out.println("Update timed out");
 			}
-
-			private void handleTimer() {
-				// TODO Auto-generated method stub
-				//update sprites				
-			}
-		}, updateDuration, updateDuration);
+		}, myUpdateDuration, myUpdateDuration);
+		System.out.println("done with initupdatetimer");
 	}
 	
-	private Scene initScene(Group root) {
+	private void initScene(Group root) {
 		Scene scene = new Scene(root);
 		Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 		root.getChildren().add(canvas);
-		gc = canvas.getGraphicsContext2D();
-		return scene;
+		myScene = scene;
+		myGc = canvas.getGraphicsContext2D();
+		System.out.println("inited scene");
 	}
 	
-	private void generateSprites() {
-		
-	}
+	protected abstract void populateSceneWithSprites();
 	
 	private void checkCollisions() {
 		
@@ -75,6 +79,8 @@ public class Level {
 	private void updateCanvas(GraphicsContext gc) {
 		// leave empty and just override in individual levels?
 	}
+	
+	protected abstract void moveSpritesForward(ArrayList<Sprite> sprites);
 	
 	private void updateSushi() {
 		

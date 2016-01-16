@@ -10,9 +10,10 @@ public class Main extends Application {
 	
 	public void start(Stage theStage) {
 		Game myGame = new Game();
+		System.out.println("created new game");
 		theStage.setTitle(myGame.getTitle());
-		
-		theStage.show();
+		System.out.println("set title");
+		myGame.init(theStage);
 	}
 	
 }

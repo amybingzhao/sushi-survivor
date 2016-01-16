@@ -10,11 +10,10 @@ import java.util.TimerTask;
 
 public class Game {
 	public static final String TITLE = "Sushi Survivor: Survival of the Sushiest";
-	private ArrayList<String> input = new ArrayList<String>();
-	private ArrayList<Sprite> knifeList = new ArrayList<Sprite>();
-	private ArrayList<Sprite> shrimpList = new ArrayList<Sprite>();
+	private ArrayList<String> myInput = new ArrayList<String>();
 	private static final int LEVEL_DURATION = 2*1000;
-	private Timer levelTimer;
+	private Timer myLevelTimer;
+	private Level myLevel;
 	
 	/*
 	 * Returns the title of the game.
@@ -23,13 +22,22 @@ public class Game {
 		return TITLE;
 	}
 	
-	public Scene initScene(Group root) {
-		Scene s = new Scene(root);
-		
-		return s;
+	public void init(Stage stage) {
+		// TODO: need to init a timer to switch levels
+		TableLevel level1 = new TableLevel();
+		System.out.println("created level 1");
+		stage.setScene(level1.getScene());
+		System.out.println("set scene");
+		startLevel(level1, stage);
+		System.out.println("started level 1");
+		stage.show();
 	}
 	
-	public void switchLevel(Stage stage, Level level) {
+	public void startLevel(Level level, Stage stage) {
+		level.init(stage);
+	}
+	
+	public void switchLevel(Stage stage, Level nextLevel) {
 		//clear input
 		//cancel all timers
 		//level.init();
