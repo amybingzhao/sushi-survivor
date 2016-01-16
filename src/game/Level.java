@@ -24,7 +24,7 @@ public abstract class Level {
 	public GraphicsContext myGc;
 	public Scene myScene;
 	public Sushi sushi = new Sushi(0, CANVAS_HEIGHT/2);
-	private ArrayList<String> myInput = new ArrayList<String>();
+	private ArrayList<String> myInput;
 	public double spriteSpeed = 2.0;
 	
 	public void init(Stage stage) {
@@ -34,6 +34,7 @@ public abstract class Level {
 		setupKeyEventHandler();
 		populateSceneWithSprites();
 		sushi.render(myGc);
+		myInput = new ArrayList<String>();
 		
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
