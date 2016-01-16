@@ -1,5 +1,5 @@
 Genre: 2D Scrolling Platformer
-Name: Sushi Survivor (Survival of the Sushiest!)
+Name: "Sushi Survivor: Survival of the Sushiest"
 Backstory: You've escaped! You are a brave piece of sushi who has escaped the clutches of the sushi
 	 chef and your goal is to run across the table, avoiding knives and collecting more pieces of
 	 shrimp to help you become the sushiest! If you get hit by a knife, that's the end for you.
@@ -9,7 +9,8 @@ Backstory: You've escaped! You are a brave piece of sushi who has escaped the cl
 	 chopsticks by throwing your pieces of shrimp at them if you're in a dire situation. Good luck!
 Goal: Survive with as many pieces of shrimp as possible; don't get hit by knives or chopsticks.
 Basic mechanics: Use the arrow pad to move, use the space bar to throw.
-Levels: (1) Collecting shrimp and avoiding death by knives, moving forward across the table
-	    (2) Trying to avoid chopsticks and soy sauce coming from above, moving left and right.
-	    Getting hit by chopsticks will result in the loss of one piece of shrimp and getting hit by
-	    soy sauce will result in reduced speed.
+Levels: (1) Table level: collecting shrimp and avoiding death by knives, moving forward across the 
+		table
+	    (2) Customer level: Trying to avoid chopsticks and soy sauce coming from above, moving left 
+	    and right. Getting hit by chopsticks will result in the loss of one piece of shrimp and 
+	    getting hit by soy sauce will result in reduced speed.
