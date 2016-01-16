@@ -12,7 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
 public abstract class Level {
-	public static int NUM_SPRITES_PER_TYPE;
+	public static int NUM_SPRITES_PER_TYPE = 5;
 	public static final int CANVAS_WIDTH = 1024;
 	public static final int CANVAS_HEIGHT = 512;
 	public static final long levelDuration = 2*1000;
@@ -23,10 +23,9 @@ public abstract class Level {
 	
 	public void init(Stage stage) {
 		//initUpdateTimer();
-		System.out.println("update timer inited");
 		Group root = new Group();
 		initScene(root);
-		//populateSceneWithSprites();
+		populateSceneWithSprites();
 		
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -46,7 +45,6 @@ public abstract class Level {
 	
 	// TODO: update timer method isnt working 
 	private void initUpdateTimer() {
-		System.out.println("hi");
 		myUpdateTimer.schedule(new TimerTask() {
 			@Override
 			public void run() {

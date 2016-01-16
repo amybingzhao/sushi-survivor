@@ -25,11 +25,8 @@ public class Game {
 	public void init(Stage stage) {
 		// TODO: need to init a timer to switch levels
 		TableLevel level1 = new TableLevel();
-		System.out.println("created level 1");
 		stage.setScene(level1.getScene());
-		System.out.println("set scene");
 		startLevel(level1, stage);
-		System.out.println("started level 1");
 		stage.show();
 	}
 	
