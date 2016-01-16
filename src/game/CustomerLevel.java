@@ -24,7 +24,7 @@ public class CustomerLevel extends Level {
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
 			double curY = s.posY;
-			s.posY = curY + 1;
+			s.posY = curY + spriteSpeed;
 			s.render(myGc);
 		}
 	}

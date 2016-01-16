@@ -44,7 +44,7 @@ public class TableLevel extends Level {
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
 			double curX = s.posX;
-			s.posX = curX - 1;
+			s.posX = curX - spriteSpeed;
 			s.render(myGc);
 		}
 	}
@@ -83,11 +83,21 @@ public class TableLevel extends Level {
 			Sprite s = sprites.get(i);
 			if ((s.posX + s.width) < 0) {
 				sprites.remove(i);
-				Sprite s2 = generateSprite(filename);
-				s2.posX = CANVAS_WIDTH;
-				sprites.add(s2);
-				s2.render(myGc);
+				addMoreSprites(sprites, filename, 1);
 			}
+		}
+		// replace the ones that've been collided with:
+		// TODO: make into own method
+		int diff = NUM_SPRITES_PER_TYPE - sprites.size();
+		addMoreSprites(sprites, filename, diff);
+	}
+	
+	public void addMoreSprites(ArrayList<Sprite> sprites, String filename, int num) {
+		for (int i = 0; i < num; i++) {
+			Sprite s = generateSprite(filename);
+			s.posX = CANVAS_WIDTH;
+			sprites.add(s);
+			s.render(myGc);
 		}
 	}
 }

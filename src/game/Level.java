@@ -1,8 +1,10 @@
 package game;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+
+import javax.swing.Timer;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -17,16 +19,16 @@ public abstract class Level {
 	public static int NUM_SPRITES_PER_TYPE = 5;
 	public static final int CANVAS_WIDTH = 1024;
 	public static final int CANVAS_HEIGHT = 512;
-	public static final long levelDuration = 2*1000;
-	public static long myUpdateDuration = 200;
-	private Timer myUpdateTimer;
+	public static int myUpdateDuration = (int) (10*1000);
+	private Timer myUpdateSpeedTimer;
 	public GraphicsContext myGc;
 	public Scene myScene;
 	public Sushi sushi = new Sushi(0, CANVAS_HEIGHT/2);
 	private ArrayList<String> myInput = new ArrayList<String>();
+	public double spriteSpeed = 2.0;
 	
 	public void init(Stage stage) {
-		//initUpdateTimer();
+		scheduleUpdateTimer();
 		Group root = new Group();
 		initScene(root);
 		setupKeyEventHandler();
@@ -51,15 +53,17 @@ public abstract class Level {
 	}
 	
 	// TODO: update timer method isnt working 
-	private void initUpdateTimer() {
-		myUpdateTimer.schedule(new TimerTask() {
+	private void scheduleUpdateTimer() {
+		myUpdateSpeedTimer = new Timer(myUpdateDuration, new ActionListener() {
 			@Override
-			public void run() {
-				// want to increase game speed
-				System.out.println("Update timed out");
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				sushi.speed = sushi.speed + 0.3;
+				spriteSpeed = spriteSpeed + 0.3;
+				System.out.println("update timer timed out");
 			}
-		}, myUpdateDuration, myUpdateDuration);
-		System.out.println("done with initupdatetimer");
+		});
+		myUpdateSpeedTimer.start();
 	}
 	
 	private void initScene(Group root) {
