@@ -21,7 +21,7 @@ public class Sushi extends Sprite {
 		width = image.getWidth();
 	}
 
-	private void handleInput(ArrayList<String> input, double canvasWidth, double canvasHeight, String level) {
+	public void handleInput(ArrayList<String> input, double canvasWidth, double canvasHeight, String level) {
 		if (input.contains("LEFT") && (posX - speed >= 0)) {
 			posX = posX - speed;
 		}
@@ -35,7 +35,7 @@ public class Sushi extends Sprite {
 			if (input.contains("DOWN") && (posY + speed <= (canvasHeight - height))) {
 				posY = posY + speed;
 			}
-		} else if (level.equals("Customer Levl")) {
+		} else if (level.equals("Customer Level")) {
 			if (input.contains("SPACE") && this.numFish > 0) {
 				this.throwFish();
 			}

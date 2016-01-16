@@ -10,7 +10,6 @@ import java.util.TimerTask;
 
 public class Game {
 	public static final String TITLE = "Sushi Survivor: Survival of the Sushiest";
-	private ArrayList<String> myInput = new ArrayList<String>();
 	private static final int LEVEL_DURATION = 2*1000;
 	private Timer myLevelTimer;
 	private Level myLevel;

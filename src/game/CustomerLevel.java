@@ -19,8 +19,30 @@ public class CustomerLevel extends Level {
 		
 	}
 	
+	private void moveSpritesForward(ArrayList<Sprite> sprites) {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < sprites.size(); i++) {
+			Sprite s = sprites.get(i);
+			double curY = s.posY;
+			s.posY = curY + 1;
+			s.render(myGc);
+		}
+	}
+
 	@Override
-	protected void moveSpritesForward(ArrayList<Sprite> sprites) {
+	protected void checkListCollisions() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void updateSushi() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void updateCanvas() {
 		// TODO Auto-generated method stub
 		
 	}
