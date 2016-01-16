@@ -11,10 +11,10 @@ public class Sushi extends Sprite {
 	public double speed;
 	public double numFish;
 
-	public Sushi(double x, double y) {
+	public Sushi(double x, double y, double num) {
 		image = new Image("sushi.jpg");
 		speed = INIT_SPEED;
-		numFish = 0;
+		numFish = num;
 		posX = x;
 		posY = y;
 		height = image.getHeight();

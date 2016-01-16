@@ -17,7 +17,7 @@ public class TableLevel extends Level {
 	@Override
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
-		sushi = new Sushi(0, CANVAS_HEIGHT/2);
+		sushi = new Sushi(0, CANVAS_HEIGHT/2, 0);
 		sushi.render(myGc);
 		populateSpriteArrayList("knife.png", knifeList);
 		populateSpriteArrayList("shrimp.png", shrimpList);

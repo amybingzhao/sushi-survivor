@@ -12,6 +12,8 @@ public class CustomerLevel extends Level {
 	private static final double UPWARDS = -1;
 	private static final double DOWNWARDS = 1;
 	
+	// TODO: create constructor with sushi or numFish or something
+	
 	public String toString() {
 		return "Customer Level";
 	}
@@ -19,12 +21,11 @@ public class CustomerLevel extends Level {
 	@Override
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
-		sushi = new Sushi(CANVAS_WIDTH/2, CANVAS_HEIGHT);//NEED TO RETAIN NUM FISH SOMEHOW
+		sushi = new Sushi(CANVAS_WIDTH/2, CANVAS_HEIGHT, 0);//NEED TO RETAIN NUM FISH SOMEHOW
 		sushi.posY = CANVAS_HEIGHT - sushi.height;
 		sushi.render(myGc);
 		initChopsticks();
 		populateSpriteArrayList("soysauce.png", soySauceList);
-		System.out.println("merp");
 
 	}
 	
@@ -49,7 +50,6 @@ public class CustomerLevel extends Level {
 		if (chopsticks.posY <= 0 - chopsticks.height) {
 			chopsticks.posX = sushi.posX;
 			chopstickDirection = spriteSpeed * DOWNWARDS;
-			System.out.println("reached top");
 		}
 		else if (chopsticks.posY >= CANVAS_HEIGHT - chopsticks.height) {
 			chopstickDirection = spriteSpeed * UPWARDS;

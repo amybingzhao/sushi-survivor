@@ -3,10 +3,11 @@ package game;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import javax.swing.Timer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -29,13 +30,10 @@ public abstract class Level {
 	
 	public void init(Stage stage) {
 		scheduleUpdateTimer();
-		System.out.println("scheduled update timer");
 		Group root = new Group();
 		initScene(root);
 		setupKeyEventHandler();
-		System.out.println("set up key event handler");
 		populateSceneWithSprites();
-		System.out.println("populated with sprites");
 		myInput = new ArrayList<String>();
 		
 		new AnimationTimer() {
@@ -57,16 +55,18 @@ public abstract class Level {
 	
 	// TODO: update timer method isnt working 
 	private void scheduleUpdateTimer() {
-		myUpdateSpeedTimer = new Timer(UPDATE_DURATION, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				sushi.speed = sushi.speed + 0.3;
-				spriteSpeed = spriteSpeed + 0.3;
-				System.out.println("update timer timed out");
+		myUpdateSpeedTimer = new Timer();
+		myUpdateSpeedTimer.schedule(new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						sushi.speed = sushi.speed + 0.3;
+						spriteSpeed = spriteSpeed + 0.3;
+						System.out.println("update timer timed out");
+					}
+				});
 			}
-		});
-		myUpdateSpeedTimer.start();
+		}, UPDATE_DURATION, UPDATE_DURATION);	
 	}
 	
 	private void initScene(Group root) {
