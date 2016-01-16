@@ -19,21 +19,23 @@ public abstract class Level {
 	public static int NUM_SPRITES_PER_TYPE = 5;
 	public static final int CANVAS_WIDTH = 1024;
 	public static final int CANVAS_HEIGHT = 512;
-	public static int myUpdateDuration = (int) (10*1000);
+	public static final int UPDATE_DURATION = 10 * 1000;
 	private Timer myUpdateSpeedTimer;
 	public GraphicsContext myGc;
 	public Scene myScene;
-	public Sushi sushi = new Sushi(0, CANVAS_HEIGHT/2);
+	public Sushi sushi;
 	private ArrayList<String> myInput;
 	public double spriteSpeed = 2.0;
 	
 	public void init(Stage stage) {
 		scheduleUpdateTimer();
+		System.out.println("scheduled update timer");
 		Group root = new Group();
 		initScene(root);
 		setupKeyEventHandler();
+		System.out.println("set up key event handler");
 		populateSceneWithSprites();
-		sushi.render(myGc);
+		System.out.println("populated with sprites");
 		myInput = new ArrayList<String>();
 		
 		new AnimationTimer() {
@@ -55,7 +57,7 @@ public abstract class Level {
 	
 	// TODO: update timer method isnt working 
 	private void scheduleUpdateTimer() {
-		myUpdateSpeedTimer = new Timer(myUpdateDuration, new ActionListener() {
+		myUpdateSpeedTimer = new Timer(UPDATE_DURATION, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -95,6 +97,58 @@ public abstract class Level {
 	}
 	
 	protected abstract void populateSceneWithSprites();
+	
+	public void populateSpriteArrayList(String filename, ArrayList<Sprite> array) {
+		for (int i = 0; i < NUM_SPRITES_PER_TYPE; i++) {
+			Sprite s = generateSprite(filename);
+			array.add(s);
+			s.render(myGc);
+		}
+	}
+
+	public Sprite generateSprite(String filename) {
+		// TODO Auto-generated method stub
+		Sprite sprite = new Sprite();
+		sprite.setImage(filename);
+		double x = generateRandomX(sprite);
+		double y = generateRandomY(sprite);
+		sprite.setPosition(x, y);
+		return sprite;
+	}
+	
+	protected abstract double generateRandomX(Sprite sprite);
+	protected abstract double generateRandomY(Sprite sprite);
+	
+	public void replaceOutOfBoundsSprites(ArrayList<Sprite> sprites, String filename) {
+		for (int i = 0; i < sprites.size(); i++) {
+			Sprite s = sprites.get(i);
+			if (outOfBounds(s)) {
+				sprites.remove(i);
+				addMoreSprites(sprites, filename, 1);
+			}
+		}
+		// replace the ones that've been collided with:
+		// TODO: make into own method
+		int diff = NUM_SPRITES_PER_TYPE - sprites.size();
+		addMoreSprites(sprites, filename, diff);
+	}
+	
+	protected abstract boolean outOfBounds(Sprite s);
+	
+	public void addMoreSprites(ArrayList<Sprite> sprites, String filename, int num) {
+		for (int i = 0; i < num; i++) {
+			Sprite s = generateSprite(filename);
+			switch (this.toString()) {
+				case "Table Level":
+					s.posX = CANVAS_WIDTH;
+					break;
+				case "Customer Level":
+					s.posY = 0;
+			}
+			sprites.add(s);
+			s.render(myGc);
+		}
+	}
 	
 	protected abstract void checkListCollisions();
 	

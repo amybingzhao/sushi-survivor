@@ -12,7 +12,8 @@ import javafx.stage.Stage;
 
 public class Game {
 	public static final String TITLE = "Sushi Survivor: Survival of the Sushiest";
-	private static final int LEVEL_DURATION = 3*60*1000;
+	private static final int LEVEL_DURATION = 1 * 60 * 1000;
+	//private static final int LEVEL_DURATION = 2*1000;
 	private Timer myLevelTimer;
 	private Level myLevel;
 	private Stage myStage;
@@ -24,14 +25,18 @@ public class Game {
 		return TITLE;
 	}
 	
-	public void init() {
+	public void init(Stage stage) {
 		// TODO: need to init a timer to switch levels
-		startLevel(new TableLevel(), myStage);
+		myStage = stage;
+		scheduleLevelTimer();
+		//startLevel(new TableLevel(), myStage);
+		startLevel(new CustomerLevel(), myStage);
 		myStage.show();
 	}
 	
 	public void startLevel(Level level, Stage stage) {
 		myStage.setScene(level.getScene());
+		System.out.println("Scene set");
 		level.init(stage);
 	}
 	
@@ -40,10 +45,12 @@ public class Game {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				myLevelTimer.stop();
 				startLevel(new CustomerLevel(), myStage);
+				myLevelTimer.stop();
+				System.out.println("level timer stopped");
 			}
 		});
 		myLevelTimer.start();
+		System.out.println("Level timer started");
 	}
 }
