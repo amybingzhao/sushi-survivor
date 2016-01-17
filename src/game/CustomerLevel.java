@@ -3,6 +3,9 @@ package game;
 import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import javafx.stage.Stage;
 
 public class CustomerLevel extends Level {
@@ -13,6 +16,17 @@ public class CustomerLevel extends Level {
 	private static final double DOWNWARDS = 1;
 	
 	// TODO: create constructor with sushi or numFish or something
+	public CustomerLevel(double numStartingFish) {
+		sushi = new Sushi(CANVAS_WIDTH/2, CANVAS_HEIGHT, 0);//NEED TO RETAIN NUM FISH SOMEHOW
+		sushi.posY = CANVAS_HEIGHT - sushi.height;
+		sushi.numFish = numStartingFish;
+	}
+	
+	private void addBackground(String filename) {
+//		BackgroundImage background = new BackgroundImage(new Image(filename), null, null, null, null);
+		Image background = new Image(filename);
+		myGc.drawImage(background, 0, 0);
+	}
 	
 	public String toString() {
 		return "Customer Level";
@@ -21,12 +35,10 @@ public class CustomerLevel extends Level {
 	@Override
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
-		sushi = new Sushi(CANVAS_WIDTH/2, CANVAS_HEIGHT, 0);//NEED TO RETAIN NUM FISH SOMEHOW
-		sushi.posY = CANVAS_HEIGHT - sushi.height;
+		addBackground("customerBackground.jpg");
 		sushi.render(myGc);
 		initChopsticks();
 		populateSpriteArrayList("soysauce.png", soySauceList);
-
 	}
 	
 	private void initChopsticks() {
@@ -51,7 +63,7 @@ public class CustomerLevel extends Level {
 			chopsticks.posX = sushi.posX;
 			chopstickDirection = spriteSpeed * DOWNWARDS;
 		}
-		else if (chopsticks.posY >= CANVAS_HEIGHT - chopsticks.height) {
+		else if (chopsticks.posY >= CANVAS_HEIGHT - chopsticks.height - sushi.height) {
 			chopstickDirection = spriteSpeed * UPWARDS;
 		}
 		chopsticks.posY = chopsticks.posY + chopstickDirection;
@@ -81,6 +93,7 @@ public class CustomerLevel extends Level {
 	@Override
 	protected void updateCanvas() {
 		// TODO Auto-generated method stub
+		addBackground("customerBackground.jpg");
 		moveSpritesForward(soySauceList);
 		replaceOutOfBoundsSprites(soySauceList, "soysauce.png");
 		moveChopsticks();

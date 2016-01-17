@@ -9,7 +9,10 @@ public class TableLevel extends Level {
 	public ArrayList<Sprite> knifeList = new ArrayList<Sprite>();
 	public ArrayList<Sprite> shrimpList = new ArrayList<Sprite>();
 	
-
+	public TableLevel (double numStartingFish) {
+		sushi = new Sushi(0, CANVAS_HEIGHT/2, 0);
+		sushi.numFish = numStartingFish;
+	}
 	public String toString() {
 		return "Table Level";
 	}
@@ -17,7 +20,6 @@ public class TableLevel extends Level {
 	@Override
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
-		sushi = new Sushi(0, CANVAS_HEIGHT/2, 0);
 		sushi.render(myGc);
 		populateSpriteArrayList("knife.png", knifeList);
 		populateSpriteArrayList("shrimp.png", shrimpList);

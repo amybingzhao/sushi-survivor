@@ -31,7 +31,7 @@ public class Game {
 		// TODO: need to init a timer to switch levels
 		myStage = stage;
 		scheduleLevelTimer();
-		startLevel(new TableLevel(), myStage);
+		startLevel(new TableLevel((double) 0), myStage);
 		startTime = System.currentTimeMillis();
 		myStage.show();
 	}
@@ -49,7 +49,8 @@ public class Game {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					public void run() {
-						startLevel(new CustomerLevel(), myStage);
+						double numStartingFish = myLevel.sushi.numFish;
+						startLevel(new CustomerLevel(numStartingFish), myStage);
 						System.out.println("level timer stopped");
 					}
 				});
