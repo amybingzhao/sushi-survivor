@@ -12,8 +12,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Game {
-	public static final String TITLE = "Sushi Survivor: Survival of the Sushiest";
-	private static final int LEVEL_DURATION = 10 * 1000;
+	public final String TITLE = "Sushi Survivor: Survival of the Sushiest";
+	private final int LEVEL_DURATION = 10 * 1000;
 	//private static final int LEVEL_DURATION = 2*1000;
 	private Timer myLevelTimer;
 	private Level myLevel;

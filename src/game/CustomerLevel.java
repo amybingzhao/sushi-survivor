@@ -12,8 +12,8 @@ public class CustomerLevel extends Level {
 	public ArrayList<Sprite> soySauceList = new ArrayList();
 	public Sprite chopsticks = new Sprite();
 	private double chopstickDirection;
-	private static final double UPWARDS = -1;
-	private static final double DOWNWARDS = 1;
+	private final double UPWARDS = -1;
+	private final double DOWNWARDS = 1;
 	
 	// TODO: create constructor with sushi or numFish or something
 	public CustomerLevel(double numStartingFish) {

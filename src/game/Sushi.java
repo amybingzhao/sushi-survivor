@@ -7,7 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class Sushi extends Sprite {
-	private static final double INIT_SPEED = 3;
+	private final double INIT_SPEED = 3;
 	public double speed;
 	public double numFish;
 

@@ -25,10 +25,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public abstract class Level {
-	public static int NUM_SPRITES_PER_TYPE = 5;
-	public static final int CANVAS_WIDTH = 1024;
-	public static final int CANVAS_HEIGHT = 512;
-	public static final int UPDATE_DURATION = 10 * 1000;
+	public final int NUM_SPRITES_PER_TYPE = 5;
+	public final int CANVAS_WIDTH = 1024;
+	public final int CANVAS_HEIGHT = 512;
+	public final int UPDATE_DURATION = 10 * 1000;
 	private Timer myUpdateSpeedTimer;
 	public GraphicsContext myGc;
 	public Scene myScene;
