@@ -43,7 +43,7 @@ public class Game {
 	//private Pane splashLayout;
 	private Group splashLayout;
 	private static final String SPLASH_IMAGE = "splashBackground.jpg";
-	private static final int BOTTOM_BORDER = 50;
+	private static final int BOTTOM_BORDER = 35;
 	/*
 	 * Returns the title of the game.
 	 */
@@ -150,7 +150,7 @@ public class Game {
 		                fadeSplash.play();
 					}
 				});
-	}
+	}		
 	
 	private void hideStageAndInitGame(Stage stage) {
 		stage.hide();

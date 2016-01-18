@@ -63,7 +63,7 @@ public class CustomerLevel extends Level {
 			chopsticks.posX = sushi.posX;
 			chopstickDirection = spriteSpeed * DOWNWARDS;
 		}
-		else if (chopsticks.posY >= CANVAS_HEIGHT - chopsticks.height - sushi.height) {
+		else if (chopsticks.posY >= CANVAS_HEIGHT - chopsticks.height - sushi.height + 1) {
 			chopstickDirection = spriteSpeed * UPWARDS;
 		}
 		chopsticks.posY = chopsticks.posY + chopstickDirection;
@@ -78,15 +78,16 @@ public class CustomerLevel extends Level {
 			System.out.println("ran into soy sauce");
 		}
 		if (sushi.intersects(chopsticks.getBoundary())) {
-			updateSushi();
+			updateSushiAndScore();
 		}
 		
 	}
 
 	@Override
-	protected void updateSushi() {
+	protected void updateSushiAndScore() {
 		// TODO Auto-generated method stub
 		sushi.numFish = sushi.numFish - 2;
+		scoreLabel.setText("Score: " + Integer.toString((int) sushi.numFish));
 		System.out.println("numFish = " + sushi.numFish);	
 	}
 
@@ -115,5 +116,11 @@ public class CustomerLevel extends Level {
 	protected boolean outOfBounds(Sprite s) {
 		// TODO Auto-generated method stub
 		return (s.height + s.posY) > CANVAS_HEIGHT;
+	}
+
+	@Override
+	protected String getInstructions() {
+		// TODO Auto-generated method stub
+		return "Use the left and right arrow keys to move.\nSoy sauce will slow you down.\nThe customer's chopsticks will steal your shrimp!";
 	}
 }

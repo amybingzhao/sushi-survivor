@@ -43,7 +43,7 @@ public abstract class Level {
 	public boolean start;
 	public boolean stopLevel;
 	private Group myRoot;
-	private Label scoreLabel;
+	protected Label scoreLabel;
 	
 	public void init(Stage stage) {
 		myStage = stage;
@@ -55,6 +55,7 @@ public abstract class Level {
 		
 		Label readyLabel = createReadyMessage();
 		myRoot.getChildren().add(readyLabel);
+		
 		
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
@@ -85,7 +86,10 @@ public abstract class Level {
 	private void initLevelState() {
 		myInput = new ArrayList<String>();
 		spriteSpeed = INIT_SPRITE_SPEED;
-		scoreLabel = new Label("Score: " + Double.toString(sushi.numFish));
+		scoreLabel = new Label("Score: " + Integer.toString((int) sushi.numFish));
+		scoreLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		scoreLabel.setAlignment(Pos.TOP_LEFT);
+		myRoot.getChildren().add(scoreLabel);
 		start = false;
 		gameOver = false;
 		win = false;
@@ -99,17 +103,21 @@ public abstract class Level {
 		}
 	}
 	public Label createReadyMessage() {
-		Label readyLabel = new Label("Press ENTER to start!");
+		Label readyLabel = new Label(getInstructions() + "\n\n" + "Press ENTER to start!");
+		readyLabel.setWrapText(true);
 		readyLabel.setMinWidth(CANVAS_WIDTH);
 		readyLabel.setMinHeight(CANVAS_HEIGHT);
 		readyLabel.setAlignment(Pos.CENTER);
-		readyLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 35));
+		readyLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
+		readyLabel.setTextFill(Color.GRAY);
 		return readyLabel;
 	}
 	
 	public Scene getScene() {
 		return myScene;
 	}
+	
+	protected abstract String getInstructions();
 	
 	private void scheduleUpdateTimer() {
 		myUpdateSpeedTimer = new Timer();
@@ -225,7 +233,7 @@ public abstract class Level {
 	
 	protected abstract void updateCanvas();
 		
-	protected abstract void updateSushi();
+	protected abstract void updateSushiAndScore();
 	
 	public void gameOver() {
 		createGameOverScene();
@@ -259,6 +267,7 @@ public abstract class Level {
 		gameOverLabel.setAlignment(Pos.CENTER);
 		gameOverLabel.setTextAlignment(TextAlignment.CENTER);
 		gameOverLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 35));
+		gameOverLabel.setTextFill(Color.GRAY);
 		return gameOverLabel;
 	}
 }

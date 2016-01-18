@@ -49,15 +49,16 @@ public class TableLevel extends Level {
 			System.out.println("game over");
 		}
 		if (checkSpriteCollisions(shrimpList)) {
-			updateSushi();
+			updateSushiAndScore();
 			System.out.println("ran into shrimp");
 		}
 	}
 
 	@Override
-	protected void updateSushi() {
+	protected void updateSushiAndScore() {
 		// TODO Auto-generated method stub
 		sushi.numFish++;
+		scoreLabel.setText("Score: " + Integer.toString((int) sushi.numFish));
 		System.out.println("numFish = " + sushi.numFish);
 	}
 
@@ -93,6 +94,11 @@ public class TableLevel extends Level {
 	protected boolean outOfBounds(Sprite s) {
 		// TODO Auto-generated method stub
 		return (s.posX + s.width) < 0;
+	}
+	@Override
+	protected String getInstructions() {
+		// TODO Auto-generated method stub
+		return "Use the arrow keys to move.\nCollect shrimp and dodge the knives!\nIf you get hit by a knife then it's game over.";
 	}
 
 	
