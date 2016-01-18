@@ -43,20 +43,15 @@ public abstract class Level {
 	public boolean start;
 	public boolean stopLevel;
 	private Group myRoot;
+	private Label scoreLabel;
 	
 	public void init(Stage stage) {
 		myStage = stage;
-		scheduleUpdateTimer();
 		myRoot = new Group();
 		initScene(myRoot);
-		spriteSpeed = INIT_SPRITE_SPEED;
-		setupKeyEventHandler();
 		populateSceneWithSprites();
-		myInput = new ArrayList<String>();
-		start = false;
-		gameOver = false;
-		win = false;
-		stopLevel = false;
+		initLevelState();
+		setupKeyEventHandler();
 		
 		Label readyLabel = createReadyMessage();
 		myRoot.getChildren().add(readyLabel);
@@ -87,9 +82,20 @@ public abstract class Level {
 		stage.setScene(myScene);
 	}
 	
+	private void initLevelState() {
+		myInput = new ArrayList<String>();
+		spriteSpeed = INIT_SPRITE_SPEED;
+		scoreLabel = new Label("Score: " + Double.toString(sushi.numFish));
+		start = false;
+		gameOver = false;
+		win = false;
+		stopLevel = false;
+	}
+	
 	private void checkForReady() {
 		if (myInput.contains("ENTER")) {
 			start = true;
+			scheduleUpdateTimer();
 		}
 	}
 	public Label createReadyMessage() {
