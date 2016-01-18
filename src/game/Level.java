@@ -64,6 +64,8 @@ public abstract class Level {
 				if (start == true) {
 					readyLabel.setText("");;
 					if (stopLevel == true) {
+						myUpdateSpeedTimer.cancel();
+						myUpdateSpeedTimer.purge();
 						stop();
 						if (gameOver == true) {
 							gameOver();
@@ -217,8 +219,6 @@ public abstract class Level {
 	protected abstract void updateSushi();
 	
 	public void gameOver() {
-		myUpdateSpeedTimer.cancel();
-		myUpdateSpeedTimer.purge();
 		createGameOverScene();
 	}
 	
