@@ -39,7 +39,10 @@ public class TableLevel extends Level {
 	protected void checkListCollisions() {
 		// TODO Auto-generated method stub
 		if(checkSpriteCollisions(knifeList)) {
-			//gameOver();
+			knifeList.clear();
+			shrimpList.clear();
+			gameOver = true;
+			win = false;
 			System.out.println("game over");
 		}
 		if (checkSpriteCollisions(shrimpList)) {

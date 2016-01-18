@@ -74,7 +74,7 @@ public class CustomerLevel extends Level {
 	protected void checkListCollisions() {
 		// TODO Auto-generated method stub
 		if (checkSpriteCollisions(soySauceList)) {
-			sushi.speed = sushi.speed - 0.3;
+			sushi.speed = sushi.speed - 0.5;
 			System.out.println("ran into soy sauce");
 		}
 		if (sushi.intersects(chopsticks.getBoundary())) {

@@ -30,7 +30,7 @@ public class Game {
 	public void init(Stage stage) {
 		// TODO: need to init a timer to switch levels
 		myStage = stage;
-		scheduleLevelTimer();
+		scheduleTableLevelTimer();
 		startLevel(new TableLevel((double) 0), myStage);
 		startTime = System.currentTimeMillis();
 		myStage.show();
@@ -38,20 +38,41 @@ public class Game {
 
 	public void startLevel(Level level, Stage stage) {
 		myLevel = level;
-		myStage.setScene(level.getScene());
 		level.init(stage);
+		myStage.setScene(level.getScene());
 	}
 
-	public void scheduleLevelTimer() {
+	public void scheduleTableLevelTimer() {
 		myLevelTimer = new Timer();
 
 		myLevelTimer.schedule(new TimerTask() {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					public void run() {
-						double numStartingFish = myLevel.sushi.numFish;
-						startLevel(new CustomerLevel(numStartingFish), myStage);
-						System.out.println("level timer stopped");
+						System.out.println("level's game over status: " + String.valueOf(myLevel.gameOver));
+						if (myLevel.gameOver == false) {
+							double numStartingFish = myLevel.sushi.numFish;
+							startLevel(new CustomerLevel(numStartingFish), myStage);
+							scheduleCustomerLevelTimer();
+							System.out.println("level timer stopped");
+						}
+					}
+				});
+			}
+		}, LEVEL_DURATION);
+	};
+
+	public void scheduleCustomerLevelTimer() {
+		myLevelTimer = new Timer();
+
+		myLevelTimer.schedule(new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						myLevel.gameOver = true;
+						myLevel.win = true;
+						myLevel.gameOver();
+						System.out.println("customer timer stopped");
 					}
 				});
 			}

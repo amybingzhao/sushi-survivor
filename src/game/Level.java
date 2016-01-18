@@ -9,11 +9,19 @@ import java.util.TimerTask;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public abstract class Level {
@@ -27,17 +35,28 @@ public abstract class Level {
 	public Sushi sushi;
 	private ArrayList<String> myInput;
 	public double spriteSpeed = 2.0;
+	private Stage myStage;
+	private Canvas myCanvas;
+	public boolean gameOver;
+	public boolean win;
 	
 	public void init(Stage stage) {
+		myStage = stage;
 		scheduleUpdateTimer();
 		Group root = new Group();
 		initScene(root);
 		setupKeyEventHandler();
 		populateSceneWithSprites();
 		myInput = new ArrayList<String>();
+		gameOver = false;
+		win = false;
 		
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
+				if (gameOver == true) {
+					stop();
+					gameOver();
+				}
 				myGc.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 				checkListCollisions();
 				checkInput();
@@ -53,7 +72,6 @@ public abstract class Level {
 		return myScene;
 	}
 	
-	// TODO: update timer method isnt working 
 	private void scheduleUpdateTimer() {
 		myUpdateSpeedTimer = new Timer();
 		myUpdateSpeedTimer.schedule(new TimerTask() {
@@ -70,11 +88,10 @@ public abstract class Level {
 	}
 	
 	private void initScene(Group root) {
-		Scene scene = new Scene(root);
-		Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-		root.getChildren().add(canvas);
-		myScene = scene;
-		myGc = canvas.getGraphicsContext2D();
+		myScene = new Scene(root);
+		myCanvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+		root.getChildren().add(myCanvas);
+		myGc = myCanvas.getGraphicsContext2D();
 		System.out.println("inited scene");
 	}
 	
@@ -172,6 +189,41 @@ public abstract class Level {
 	protected abstract void updateSushi();
 	
 	public void gameOver() {
-		
+		myUpdateSpeedTimer.cancel();
+		myUpdateSpeedTimer.purge();
+		createGameOverScene();
+	}
+	
+	private void createGameOverScene() {
+		Group root = new Group();
+		initScene(root);
+		Label gameOverLabel = createGameOverLabel();
+		//Button playAgain = new Button();
+		String score = Integer.toString((int) sushi.numFish);
+		if (win == true) {
+			gameOverLabel.setText("You survived!\n" + "Score: " + score);
+			//playAgain.setText("Click to play again!");
+		} else {
+			gameOverLabel.setText("You didn't quite make it...\n" + "Score: " + score);
+			//playAgain.setText("Click to try again!");
+		}
+		//playAgain.setContentDisplay(ContentDisplay.BOTTOM);;
+		root.getChildren().addAll(gameOverLabel);
+		myScene.setFill(Color.GRAY);
+		myStage.setScene(myScene);
+		myStage.show();
+		//Platform.exit();
+	}
+	
+	private Label createGameOverLabel() {
+		Label gameOverLabel = new Label();
+		gameOverLabel.setMinWidth(CANVAS_WIDTH/2);
+		gameOverLabel.setMinHeight(CANVAS_HEIGHT/2);
+		gameOverLabel.setVisible(true);
+		gameOverLabel.setLayoutX((CANVAS_WIDTH)/4);
+		gameOverLabel.setLayoutY((CANVAS_HEIGHT)/4);
+		gameOverLabel.setTextAlignment(TextAlignment.CENTER);
+		gameOverLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 35));
+		return gameOverLabel;
 	}
 }
