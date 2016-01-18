@@ -12,7 +12,7 @@ public class Sushi extends Sprite {
 	public double numFish;
 
 	public Sushi(double x, double y, double num) {
-		image = new Image("sushi.jpg");
+		image = new Image("sushi.png");
 		speed = INIT_SPEED;
 		numFish = num;
 		posX = x;

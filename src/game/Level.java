@@ -232,7 +232,7 @@ public abstract class Level {
 			gameOverLabel.setText("You survived!\n" + "Score: " + score);
 			//playAgain.setText("Click to play again!");
 		} else {
-			gameOverLabel.setText("You didn't quite make it...\n" + "Score: " + score);
+			gameOverLabel.setText("So close yet so far...\n" + "Score: " + score);
 			//playAgain.setText("Click to try again!");
 		}
 		//playAgain.setContentDisplay(ContentDisplay.BOTTOM);;
