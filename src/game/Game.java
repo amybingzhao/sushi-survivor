@@ -7,18 +7,30 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Game {
-	public final String TITLE = "Sushi Survivor: Survival of the Sushiest";
-	private final int LEVEL_DURATION = 10 * 1000;
+	public static final String TITLE = "Sushi Survivor: Survival of the Sushiest";
+	private static final int LEVEL_DURATION = 10 * 1000;
 	//private static final int LEVEL_DURATION = 2*1000;
 	private Timer myLevelTimer;
 	private Level myLevel;
 	private Stage myStage;
-	private long startTime;
+	private Label progressText;
+	private ProgressBar loadProgress;
+	private static final int SPLASH_WIDTH = 500;
+	private static final int SPLASH_HEIGHT = 250;
+	private Pane splashLayout;
+	private static final String SPLASH_IMAGE = "sushi.png";
 
 	/*
 	 * Returns the title of the game.
@@ -32,7 +44,6 @@ public class Game {
 		myStage = stage;
 		scheduleTableLevelTimer();
 		startLevel(new TableLevel((double) 0), myStage);
-		startTime = System.currentTimeMillis();
 		myStage.show();
 	}
 
@@ -80,6 +91,12 @@ public class Game {
 			}
 		}, LEVEL_DURATION);
 	};
+	
+	private void generateSplash(Stage stage, Task<?> task) {
+		ImageView splash = new ImageView(new Image(SPLASH_IMAGE));
+		splashLayout = new VBox();
+		splashLayout.getChildren().add(splash);
+	}
 
 }
 

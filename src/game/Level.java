@@ -25,16 +25,17 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public abstract class Level {
-	public final int NUM_SPRITES_PER_TYPE = 5;
-	public final int CANVAS_WIDTH = 1024;
-	public final int CANVAS_HEIGHT = 512;
-	public final int UPDATE_DURATION = 10 * 1000;
+	public static final int NUM_SPRITES_PER_TYPE = 5;
+	public static final int CANVAS_WIDTH = 1024;
+	public static final int CANVAS_HEIGHT = 512;
+	public static final int UPDATE_DURATION = 10 * 1000;
+	public static final double INIT_SPRITE_SPEED = 2.0;
 	private Timer myUpdateSpeedTimer;
 	public GraphicsContext myGc;
 	public Scene myScene;
 	public Sushi sushi;
 	private ArrayList<String> myInput;
-	public double spriteSpeed = 2.0;
+	public double spriteSpeed;
 	private Stage myStage;
 	private Canvas myCanvas;
 	public boolean gameOver;
@@ -48,6 +49,7 @@ public abstract class Level {
 		scheduleUpdateTimer();
 		myRoot = new Group();
 		initScene(myRoot);
+		spriteSpeed = INIT_SPRITE_SPEED;
 		setupKeyEventHandler();
 		populateSceneWithSprites();
 		myInput = new ArrayList<String>();
@@ -92,8 +94,9 @@ public abstract class Level {
 	}
 	public Label createReadyMessage() {
 		Label readyLabel = new Label("Press ENTER to start!");
-		readyLabel.setLayoutX(CANVAS_WIDTH/2);
-		readyLabel.setLayoutY(CANVAS_HEIGHT/2);
+		readyLabel.setMinWidth(CANVAS_WIDTH);
+		readyLabel.setMinHeight(CANVAS_HEIGHT);
+		readyLabel.setAlignment(Pos.CENTER);
 		readyLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 35));
 		return readyLabel;
 	}
@@ -245,11 +248,9 @@ public abstract class Level {
 	
 	private Label createGameOverLabel() {
 		Label gameOverLabel = new Label();
-		gameOverLabel.setMinWidth(CANVAS_WIDTH/2);
-		gameOverLabel.setMinHeight(CANVAS_HEIGHT/2);
-		gameOverLabel.setVisible(true);
-		gameOverLabel.setLayoutX((CANVAS_WIDTH)/4);
-		gameOverLabel.setLayoutY((CANVAS_HEIGHT)/4);
+		gameOverLabel.setMinWidth(CANVAS_WIDTH);
+		gameOverLabel.setMinHeight(CANVAS_HEIGHT);
+		gameOverLabel.setAlignment(Pos.CENTER);
 		gameOverLabel.setTextAlignment(TextAlignment.CENTER);
 		gameOverLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 35));
 		return gameOverLabel;
