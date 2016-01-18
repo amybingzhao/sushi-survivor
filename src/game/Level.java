@@ -39,33 +39,61 @@ public abstract class Level {
 	private Canvas myCanvas;
 	public boolean gameOver;
 	public boolean win;
+	public boolean start;
+	public boolean stopLevel;
+	private Group myRoot;
 	
 	public void init(Stage stage) {
 		myStage = stage;
 		scheduleUpdateTimer();
-		Group root = new Group();
-		initScene(root);
+		myRoot = new Group();
+		initScene(myRoot);
 		setupKeyEventHandler();
 		populateSceneWithSprites();
 		myInput = new ArrayList<String>();
+		start = false;
 		gameOver = false;
 		win = false;
+		stopLevel = false;
+		
+		Label readyLabel = createReadyMessage();
+		myRoot.getChildren().add(readyLabel);
 		
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
-				if (gameOver == true) {
-					stop();
-					gameOver();
+				if (start == true) {
+					readyLabel.setText("");;
+					if (stopLevel == true) {
+						stop();
+						if (gameOver == true) {
+							gameOver();
+						}
+					}
+					myGc.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+					checkListCollisions();
+					checkInput();
+					updateCanvas();
+					sushi.render(myGc);
+				} else {
+					checkForReady();
 				}
-				myGc.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-				checkListCollisions();
-				checkInput();
-				updateCanvas();
-				sushi.render(myGc);
 			}
 		}.start();
 		
 		stage.setScene(myScene);
+	}
+	
+	private void checkForReady() {
+		if (myInput.contains("ENTER")) {
+			start = true;
+		}
+	}
+	public Label createReadyMessage() {
+		Label readyLabel = new Label("Press ENTER to start!");
+		readyLabel.setLayoutX(CANVAS_WIDTH/2);
+		readyLabel.setLayoutY(CANVAS_HEIGHT/2);
+		readyLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 35));
+		return readyLabel;
 	}
 	
 	public Scene getScene() {

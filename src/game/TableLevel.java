@@ -3,6 +3,7 @@ package game;
 import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class TableLevel extends Level {
@@ -20,6 +21,7 @@ public class TableLevel extends Level {
 	@Override
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
+		addBackground("tableBackground.png");
 		sushi.render(myGc);
 		populateSpriteArrayList("knife.png", knifeList);
 		populateSpriteArrayList("shrimp.png", shrimpList);
@@ -43,6 +45,7 @@ public class TableLevel extends Level {
 			shrimpList.clear();
 			gameOver = true;
 			win = false;
+			stopLevel = true;
 			System.out.println("game over");
 		}
 		if (checkSpriteCollisions(shrimpList)) {
@@ -61,12 +64,19 @@ public class TableLevel extends Level {
 	@Override
 	protected void updateCanvas() {
 		// TODO Auto-generated method stub
+		addBackground("tableBackground.png");
 		moveSpritesForward(knifeList);
 		replaceOutOfBoundsSprites(knifeList, "knife.png");
 		moveSpritesForward(shrimpList);
 		replaceOutOfBoundsSprites(shrimpList, "shrimp.png");
 	}
 
+	private void addBackground(String filename) {
+//		BackgroundImage background = new BackgroundImage(new Image(filename), null, null, null, null);
+		Image background = new Image(filename);
+		myGc.drawImage(background, 0, 0);
+	}
+	
 	@Override
 	protected double generateRandomX(Sprite sprite) {
 		// TODO Auto-generated method stub

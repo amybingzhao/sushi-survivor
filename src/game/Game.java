@@ -51,6 +51,7 @@ public class Game {
 					public void run() {
 						System.out.println("level's game over status: " + String.valueOf(myLevel.gameOver));
 						if (myLevel.gameOver == false) {
+							myLevel.stopLevel = true;
 							double numStartingFish = myLevel.sushi.numFish;
 							startLevel(new CustomerLevel(numStartingFish), myStage);
 							scheduleCustomerLevelTimer();
@@ -69,6 +70,7 @@ public class Game {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					public void run() {
+						myLevel.stopLevel = true;
 						myLevel.gameOver = true;
 						myLevel.win = true;
 						myLevel.gameOver();
