@@ -17,6 +17,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,11 +26,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public abstract class Level {
-	public static final int NUM_SPRITES_PER_TYPE = 5;
-	public static final int CANVAS_WIDTH = 1024;
-	public static final int CANVAS_HEIGHT = 512;
-	public static final int UPDATE_DURATION = 10 * 1000;
-	public static final double INIT_SPRITE_SPEED = 2.0;
+	private static final int NUM_SPRITES_PER_TYPE = 5;
+	protected static final int CANVAS_WIDTH = 1024;
+	protected static final int CANVAS_HEIGHT = 512;
+	private static final int UPDATE_DURATION = 10 * 1000;
+	private static final double INIT_SPRITE_SPEED = 2.0;
 	private Timer myUpdateSpeedTimer;
 	public GraphicsContext myGc;
 	public Scene myScene;
@@ -83,6 +84,8 @@ public abstract class Level {
 		stage.setScene(myScene);
 	}
 	
+	
+	
 	private void initLevelState() {
 		myInput = new ArrayList<String>();
 		spriteSpeed = INIT_SPRITE_SPEED;
@@ -102,6 +105,13 @@ public abstract class Level {
 			scheduleUpdateTimer();
 		}
 	}
+	
+	public void addBackground(String filename) {
+//		BackgroundImage background = new BackgroundImage(new Image(filename), null, null, null, null);
+		Image background = new Image(getClass().getClassLoader().getResourceAsStream(filename));
+		myGc.drawImage(background, 0, 0);
+	}
+	
 	public Label createReadyMessage() {
 		Label readyLabel = new Label(getInstructions() + "\n\n" + "Press ENTER to start!");
 		readyLabel.setWrapText(true);

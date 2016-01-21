@@ -14,18 +14,15 @@ public class CustomerLevel extends Level {
 	private double chopstickDirection;
 	private final double UPWARDS = -1;
 	private final double DOWNWARDS = 1;
+	private static final String CUSTOMER_BACKGROUND_IMAGE = "customerBackground.jpg";
+	private static final String SOYSAUCE_IMAGE = "soysauce.png";
+	private static final String CHOPSTICKS_IMAGE = "chopsticks.png";
 	
 	// TODO: create constructor with sushi or numFish or something
 	public CustomerLevel(double numStartingFish) {
 		sushi = new Sushi(CANVAS_WIDTH/2, CANVAS_HEIGHT, 0);//NEED TO RETAIN NUM FISH SOMEHOW
 		sushi.posY = CANVAS_HEIGHT - sushi.height;
 		sushi.numFish = numStartingFish;
-	}
-	
-	private void addBackground(String filename) {
-//		BackgroundImage background = new BackgroundImage(new Image(filename), null, null, null, null);
-		Image background = new Image(filename);
-		myGc.drawImage(background, 0, 0);
 	}
 	
 	public String toString() {
@@ -35,14 +32,14 @@ public class CustomerLevel extends Level {
 	@Override
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
-		addBackground("customerBackground.jpg");
+		addBackground(CUSTOMER_BACKGROUND_IMAGE);
 		sushi.render(myGc);
 		initChopsticks();
-		populateSpriteArrayList("soysauce.png", soySauceList);
+		populateSpriteArrayList(SOYSAUCE_IMAGE, soySauceList);
 	}
 	
 	private void initChopsticks() {
-		chopsticks.setImage("chopsticks.png");
+		chopsticks.setImage(CHOPSTICKS_IMAGE);
 		chopsticks.posX = CANVAS_WIDTH/2;
 		chopsticks.posY = 0 - chopsticks.height;
 		chopsticks.render(myGc);
@@ -94,9 +91,9 @@ public class CustomerLevel extends Level {
 	@Override
 	protected void updateCanvas() {
 		// TODO Auto-generated method stub
-		addBackground("customerBackground.jpg");
+		addBackground(CUSTOMER_BACKGROUND_IMAGE);
 		moveSpritesForward(soySauceList);
-		replaceOutOfBoundsSprites(soySauceList, "soysauce.png");
+		replaceOutOfBoundsSprites(soySauceList, SOYSAUCE_IMAGE);
 		moveChopsticks();
 	}
 

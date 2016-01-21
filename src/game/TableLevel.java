@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 public class TableLevel extends Level {
 	public ArrayList<Sprite> knifeList = new ArrayList<Sprite>();
 	public ArrayList<Sprite> shrimpList = new ArrayList<Sprite>();
+	private static final String TABLE_BACKGROUND_IMAGE = "tableBackground.png";
+	private static final String KNIFE_IMAGE = "knife.png";
+	private static final String SHRIMP_IMAGE = "shrimp.png";
 	
 	public TableLevel (double numStartingFish) {
 		sushi = new Sushi(0, CANVAS_HEIGHT/2, 0);
@@ -21,10 +24,10 @@ public class TableLevel extends Level {
 	@Override
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
-		addBackground("tableBackground.png");
+		addBackground(TABLE_BACKGROUND_IMAGE);
 		sushi.render(myGc);
-		populateSpriteArrayList("knife.png", knifeList);
-		populateSpriteArrayList("shrimp.png", shrimpList);
+		populateSpriteArrayList(KNIFE_IMAGE, knifeList);
+		populateSpriteArrayList(SHRIMP_IMAGE, shrimpList);
 	}
 
 	public void moveSpritesForward(ArrayList<Sprite> sprites) {
@@ -67,15 +70,9 @@ public class TableLevel extends Level {
 		// TODO Auto-generated method stub
 		addBackground("tableBackground.png");
 		moveSpritesForward(knifeList);
-		replaceOutOfBoundsSprites(knifeList, "knife.png");
+		replaceOutOfBoundsSprites(knifeList, KNIFE_IMAGE);
 		moveSpritesForward(shrimpList);
-		replaceOutOfBoundsSprites(shrimpList, "shrimp.png");
-	}
-
-	private void addBackground(String filename) {
-//		BackgroundImage background = new BackgroundImage(new Image(filename), null, null, null, null);
-		Image background = new Image(filename);
-		myGc.drawImage(background, 0, 0);
+		replaceOutOfBoundsSprites(shrimpList, SHRIMP_IMAGE);
 	}
 	
 	@Override

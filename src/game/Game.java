@@ -31,8 +31,8 @@ import javafx.util.Duration;
 
 public class Game {
 	public static final String TITLE = "Sushi Survivor: Survival of the Sushiest";
-	private static final int LEVEL_DURATION = 10 * 1000;
-	//private static final int LEVEL_DURATION = 2*1000;
+	//private static final int LEVEL_DURATION = 10 * 1000;
+	private static final int LEVEL_DURATION = 2 * 1000 * 60;
 	private Timer myLevelTimer;
 	private Level myLevel;
 	private Stage myStage;
@@ -130,9 +130,7 @@ public class Game {
 				return tasksToLoad;
 			}
 		};
-		System.out.println("hi");
 		Scene scene = createSplashScene(stage);
-		System.out.println("created splash scene");
 		generateSplash(stage, loadTask, () -> waitForPlayerReady(scene, stage));
 		
 		new Thread(loadTask).start();
@@ -184,7 +182,7 @@ public class Game {
 	}
 	
 	public Scene createSplashScene(Stage stage) {
-		ImageView splash = new ImageView(new Image(SPLASH_IMAGE));
+		ImageView splash = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(SPLASH_IMAGE)));
 		//splashLayout = new VBox();
 		splashLayout = new Group();
 		splashLayout.setEffect(new DropShadow());

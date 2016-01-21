@@ -10,9 +10,10 @@ public class Sushi extends Sprite {
 	private final double INIT_SPEED = 3;
 	public double speed;
 	public double numFish;
+	private static final String SUSHI_IMAGE = "sushi.png";
 
 	public Sushi(double x, double y, double num) {
-		image = new Image("sushi.png");
+		image = new Image(getClass().getClassLoader().getResourceAsStream(SUSHI_IMAGE));
 		speed = INIT_SPEED;
 		numFish = num;
 		posX = x;
