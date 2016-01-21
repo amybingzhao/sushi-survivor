@@ -14,8 +14,8 @@ public class TableLevel extends Level {
 	private static final String SHRIMP_IMAGE = "shrimp.png";
 	
 	public TableLevel (double numStartingFish) {
-		sushi = new Sushi(0, this.getCanvasHeight()/2, 0);
-		sushi.numFish = numStartingFish;
+		this.setSushi(new Sushi(0, this.getCanvasHeight()/2, 0));
+		this.getSushi().setNumFish(numStartingFish);
 	}
 	public String toString() {
 		return "Table Level";
@@ -25,7 +25,7 @@ public class TableLevel extends Level {
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
 		addBackground(TABLE_BACKGROUND_IMAGE);
-		sushi.render(this.getGraphicsContext());
+		this.getSushi().render(this.getGraphicsContext());
 		populateSpriteArrayList(KNIFE_IMAGE, knifeList);
 		populateSpriteArrayList(SHRIMP_IMAGE, shrimpList);
 	}
@@ -34,8 +34,8 @@ public class TableLevel extends Level {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
-			double curX = s.posX;
-			s.posX = curX - this.getSpriteSpeed();
+			double curX = s.getPosX();
+			s.setPosX(curX - this.getSpriteSpeed());
 			s.render(this.getGraphicsContext());
 		}
 	}
@@ -66,9 +66,9 @@ public class TableLevel extends Level {
 	@Override
 	protected void updateSushiAndScore() {
 		// TODO Auto-generated method stub
-		sushi.numFish++;
-		getScoreLabel().setText("Score: " + Integer.toString((int) sushi.numFish));
-		System.out.println("numFish = " + sushi.numFish);
+		this.getSushi().setNumFish(this.getSushi().getNumFish() + 1);
+		getScoreLabel().setText("Score: " + Integer.toString((int) this.getSushi().getNumFish()));
+		System.out.println("numFish = " + this.getSushi().getNumFish());
 	}
 
 	@Override
@@ -84,19 +84,19 @@ public class TableLevel extends Level {
 	@Override
 	protected double generateRandomX(Sprite sprite) {
 		// TODO Auto-generated method stub
-		return (this.getCanvasWidth()/3) + (this.getCanvasWidth() - sprite.width) * Math.random();
+		return (this.getCanvasWidth()/3) + (this.getCanvasWidth() - sprite.getWidth()) * Math.random();
 	}
 
 	@Override
 	protected double generateRandomY(Sprite sprite) {
 		// TODO Auto-generated method stub
-		return (this.getCanvasHeight() - sprite.height) * Math.random();
+		return (this.getCanvasHeight() - sprite.getHeight()) * Math.random();
 	}
 
 	@Override
 	protected boolean outOfBounds(Sprite s) {
 		// TODO Auto-generated method stub
-		return (s.posX + s.width) < 0;
+		return (s.getPosX() + s.getWidth()) < 0;
 	}
 	@Override
 	protected String getInstructions() {

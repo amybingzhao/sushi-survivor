@@ -8,12 +8,12 @@ public class Chopsticks extends Sprite {
 	private static final String CHOPSTICKS_IMAGE= "chopsticks.png";
 	
 	public Chopsticks(double x, double y) {
-		image = new Image(getClass().getClassLoader().getResourceAsStream(CHOPSTICKS_IMAGE));
+		setImage(new Image(getClass().getClassLoader().getResourceAsStream(CHOPSTICKS_IMAGE)));
 		speed = INIT_SPEED;
-		posX = x;
-		posY = y;
-		height = image.getHeight();
-		width = image.getWidth();
+		setPosX(x);
+		setPosY(y);
+		setHeight(getImage().getHeight());
+		setWidth(getImage().getWidth());
 	}
 }
 

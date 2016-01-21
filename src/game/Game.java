@@ -74,7 +74,7 @@ public class Game {
 						System.out.println("level's game over status: " + String.valueOf(myLevel.isGameOver()));
 						if (myLevel.isGameOver() == false) {
 							myLevel.setStopLevel(true);
-							double numStartingFish = myLevel.sushi.numFish;
+							double numStartingFish = myLevel.getSushi().getNumFish();
 							startLevel(new CustomerLevel(numStartingFish), myStage);
 							scheduleCustomerLevelTimer();
 							System.out.println("level timer stopped");
@@ -103,7 +103,7 @@ public class Game {
 	public void endGame() {
 		myLevel.setStopLevel(true);
 		myLevel.setGameOver(true);
-		if (myLevel.sushi.numFish > 0) {
+		if (myLevel.getSushi().getNumFish() > 0) {
 			myLevel.setWin(true);
 		} else {
 			myLevel.setWin(false);

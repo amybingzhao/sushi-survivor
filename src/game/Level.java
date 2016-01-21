@@ -34,7 +34,7 @@ public abstract class Level {
 	private Timer myUpdateSpeedTimer;
 	private GraphicsContext myGc;
 	private Scene myScene;
-	public Sushi sushi;
+	private Sushi sushi;
 	private ArrayList<String> myInput;
 	private double spriteSpeed;
 	private Stage myStage;
@@ -108,7 +108,7 @@ public abstract class Level {
 	private void initLevelState() {
 		myInput = new ArrayList<String>();
 		spriteSpeed = INIT_SPRITE_SPEED;
-		setScoreLabel(new Label("Score: " + Integer.toString((int) sushi.numFish)));
+		setScoreLabel(new Label("Score: " + Integer.toString((int) sushi.getNumFish())));
 		getScoreLabel().setFont(Font.font("Arial", FontWeight.BOLD, 20));
 		getScoreLabel().setAlignment(Pos.TOP_LEFT);
 		myRoot.getChildren().add(getScoreLabel());
@@ -154,7 +154,7 @@ public abstract class Level {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					public void run() {
-						sushi.speed = sushi.speed + 0.3;
+						sushi.setSpeed(sushi.getSpeed() + 0.3);
 						spriteSpeed = spriteSpeed + 0.3;
 						System.out.println("update timer timed out");
 					}
@@ -233,10 +233,10 @@ public abstract class Level {
 			Sprite s = generateSprite(filename);
 			switch (this.toString()) {
 				case "Table Level":
-					s.posX = CANVAS_WIDTH;
+					s.setPosX(CANVAS_WIDTH);
 					break;
 				case "Customer Level":
-					s.posY = 0;
+					s.setPosY(0);
 			}
 			sprites.add(s);
 			s.render(myGc);
@@ -273,7 +273,7 @@ public abstract class Level {
 		initScene(root);
 		Label gameOverLabel = createGameOverLabel();
 		//Button playAgain = new Button();
-		String score = Integer.toString((int) sushi.numFish);
+		String score = Integer.toString((int) sushi.getNumFish());
 		if (win == true) {
 			gameOverLabel.setText("You survived!\n" + "Score: " + score);
 			//playAgain.setText("Click to play again!");
@@ -330,5 +330,13 @@ public abstract class Level {
 
 	public void setScoreLabel(Label scoreLabel) {
 		this.scoreLabel = scoreLabel;
+	}
+	
+	public void setSushi(Sushi s) {
+		this.sushi = s;
+	}
+	
+	public Sushi getSushi() {
+		return sushi;
 	}
 }

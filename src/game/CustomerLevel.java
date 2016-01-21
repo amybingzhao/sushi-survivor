@@ -20,9 +20,10 @@ public class CustomerLevel extends Level {
 	
 	// TODO: create constructor with sushi or numFish or something
 	public CustomerLevel(double numStartingFish) {
-		sushi = new Sushi(this.getCanvasWidth()/2, this.getCanvasHeight(), 0);//NEED TO RETAIN NUM FISH SOMEHOW
-		sushi.posY = this.getCanvasHeight() - sushi.height;
-		sushi.numFish = numStartingFish;
+		super.setSushi(new Sushi(this.getCanvasWidth()/2, this.getCanvasHeight(), 0));//NEED TO RETAIN NUM FISH SOMEHOW
+		Sushi s = this.getSushi();
+		s.setPosY(this.getCanvasHeight() - s.getHeight());
+		s.setNumFish(numStartingFish);
 	}
 	
 	public String toString() {
@@ -33,15 +34,15 @@ public class CustomerLevel extends Level {
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
 		addBackground(CUSTOMER_BACKGROUND_IMAGE);
-		sushi.render(this.getGraphicsContext());
+		this.getSushi().render(this.getGraphicsContext());
 		initChopsticks();
 		populateSpriteArrayList(SOYSAUCE_IMAGE, soySauceList);
 	}
 	
 	private void initChopsticks() {
 		chopsticks.setImage(CHOPSTICKS_IMAGE);
-		chopsticks.posX = this.getCanvasWidth()/2;
-		chopsticks.posY = 0 - chopsticks.height;
+		chopsticks.setPosX(this.getCanvasWidth()/2);
+		chopsticks.setPosY(0 - chopsticks.getHeight());
 		chopsticks.render(this.getGraphicsContext());
 	}
 	
@@ -49,21 +50,21 @@ public class CustomerLevel extends Level {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
-			double curY = s.posY;
-			s.posY = curY + this.getSpriteSpeed();
+			double curY = s.getPosY();
+			s.setPosY(curY + this.getSpriteSpeed());
 			s.render(this.getGraphicsContext());
 		}
 	}
 	
 	private void moveChopsticks() {
-		if (chopsticks.posY <= 0 - chopsticks.height) {
-			chopsticks.posX = sushi.posX;
+		if (chopsticks.getPosY() <= 0 - chopsticks.getHeight()) {
+			chopsticks.setPosX(this.getSushi().getPosX());
 			chopstickDirection = this.getSpriteSpeed() * DOWNWARDS;
 		}
-		else if (chopsticks.posY >= this.getCanvasHeight() - chopsticks.height - sushi.height + 1) {
+		else if (chopsticks.getPosY() >= this.getCanvasHeight() - chopsticks.getHeight() - this.getSushi().getHeight() + 1) {
 			chopstickDirection = this.getSpriteSpeed() * UPWARDS;
 		}
-		chopsticks.posY = chopsticks.posY + chopstickDirection;
+		chopsticks.setPosY(chopsticks.getPosY() + chopstickDirection);
 		chopsticks.render(this.getGraphicsContext());
 	}
 
@@ -71,10 +72,10 @@ public class CustomerLevel extends Level {
 	protected void checkListCollisions() {
 		// TODO Auto-generated method stub
 		if (checkSpriteCollisions(soySauceList)) {
-			sushi.speed = sushi.speed - 0.5;
+			this.getSushi().setSpeed(this.getSushi().getSpeed() - 0.5);
 			System.out.println("ran into soy sauce");
 		}
-		if (sushi.intersects(chopsticks.getBoundary())) {
+		if (this.getSushi().intersects(chopsticks.getBoundary())) {
 			updateSushiAndScore();
 		}
 		
@@ -83,12 +84,12 @@ public class CustomerLevel extends Level {
 	@Override
 	protected void updateSushiAndScore() {
 		// TODO Auto-generated method stub
-		sushi.numFish = sushi.numFish - 2;
-		if (sushi.numFish <= 0) {
+		this.getSushi().setNumFish(this.getSushi().getNumFish() - 2);
+		if (this.getSushi().getNumFish() <= 0) {
 			super.setGameOver(true);
 		}
-		getScoreLabel().setText("Score: " + Integer.toString((int) sushi.numFish));
-		System.out.println("numFish = " + sushi.numFish);	
+		getScoreLabel().setText("Score: " + Integer.toString((int) this.getSushi().getNumFish()));
+		System.out.println("numFish = " + this.getSushi().getNumFish());	
 	}
 
 	@Override
@@ -103,19 +104,19 @@ public class CustomerLevel extends Level {
 	@Override
 	protected double generateRandomX(Sprite sprite) {
 		// TODO Auto-generated method stub
-		return (this.getCanvasWidth() - sprite.width) * Math.random();
+		return (this.getCanvasWidth() - sprite.getWidth()) * Math.random();
 	}
 
 	@Override
 	protected double generateRandomY(Sprite sprite) {
 		// TODO Auto-generated method stub
-		return (this.getCanvasHeight() - sprite.height - this.getCanvasHeight()/3) * Math.random();
+		return (this.getCanvasHeight() - sprite.getHeight() - this.getCanvasHeight()/3) * Math.random();
 	}
 
 	@Override
 	protected boolean outOfBounds(Sprite s) {
 		// TODO Auto-generated method stub
-		return (s.height + s.posY) > this.getCanvasHeight();
+		return (s.getHeight() + s.getPosY()) > this.getCanvasHeight();
 	}
 
 	@Override
