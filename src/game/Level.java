@@ -100,11 +100,6 @@ public abstract class Level {
 		return myScene;
 	}
 	
-	protected double getSpriteSpeed() {
-		return spriteSpeed;
-	}
-	
-	
 	private void initLevelState() {
 		myInput = new ArrayList<String>();
 		spriteSpeed = INIT_SPRITE_SPEED;
@@ -258,6 +253,7 @@ public abstract class Level {
 	
 	private void checkInput() {
 		sushi.handleInput(myInput, CANVAS_WIDTH, CANVAS_HEIGHT, this.toString());
+		checkInputForCheats(myInput);
 	}
 	
 	protected abstract void updateCanvas();
@@ -339,4 +335,32 @@ public abstract class Level {
 	public Sushi getSushi() {
 		return sushi;
 	}
+	
+	protected void checkInputForCheats(ArrayList<String> input) {
+		// TODO Auto-generated method stub
+				if (input.contains("Q")) {
+					clearLists();
+				}
+				if (input.contains("W")) {
+					this.setSpriteSpeed(this.getSpriteSpeed() - 2.0);
+				}
+				if (input.contains("E")) {
+					this.getSushi().setSpeed(this.getSushi().getSpeed() + 2.0);
+				}
+	}
+	
+	protected abstract void clearLists();
+	
+	public double getSpriteSpeed() {
+		return spriteSpeed;
+	}
+	
+	public void setSpriteSpeed(double s) {
+		if (s > 0) {
+			this.spriteSpeed = s;
+		} else {
+			this.spriteSpeed = 0.2;
+		}
+	}
+
 }

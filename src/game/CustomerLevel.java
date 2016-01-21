@@ -12,11 +12,11 @@ public class CustomerLevel extends Level {
 	private ArrayList<Sprite> soySauceList = new ArrayList();
 	private Sprite chopsticks = new Sprite();
 	private double chopstickDirection;
-	private final double UPWARDS = -1;
-	private final double DOWNWARDS = 1;
 	private static final String CUSTOMER_BACKGROUND_IMAGE = "customerBackground.jpg";
 	private static final String SOYSAUCE_IMAGE = "soysauce.png";
 	private static final String CHOPSTICKS_IMAGE = "chopsticks.png";
+	private final double UPWARDS = -1;
+	private final double DOWNWARDS = 1;
 	
 	// TODO: create constructor with sushi or numFish or something
 	public CustomerLevel(double numStartingFish) {
@@ -40,8 +40,7 @@ public class CustomerLevel extends Level {
 	}
 	
 	private void initChopsticks() {
-		chopsticks.setImage(CHOPSTICKS_IMAGE);
-		chopsticks.setPosX(this.getCanvasWidth()/2);
+		chopsticks = new Chopsticks(this.getCanvasWidth()/2, 0);
 		chopsticks.setPosY(0 - chopsticks.getHeight());
 		chopsticks.render(this.getGraphicsContext());
 	}
@@ -98,6 +97,7 @@ public class CustomerLevel extends Level {
 		addBackground(CUSTOMER_BACKGROUND_IMAGE);
 		moveSpritesForward(soySauceList);
 		replaceOutOfBoundsSprites(soySauceList, SOYSAUCE_IMAGE);
+		Sushi s = this.getSushi();
 		moveChopsticks();
 	}
 
@@ -124,4 +124,12 @@ public class CustomerLevel extends Level {
 		// TODO Auto-generated method stub
 		return "Use the left and right arrow keys to move.\nSoy sauce will slow you down.\nThe customer's chopsticks will steal your shrimp!";
 	}
+
+	
+	//TODO: try a switch case maybe instead idk will that work if you just do it w/o breaks?
+	@Override
+	protected void clearLists() {
+		soySauceList.clear();
+	}
+	
 }

@@ -103,6 +103,11 @@ public class TableLevel extends Level {
 		// TODO Auto-generated method stub
 		return "Use the arrow keys to move.\nCollect shrimp and dodge the knives!\nIf you get hit by a knife then it's game over.";
 	}
+	@Override
+	protected void clearLists() {
+		knifeList.clear();
+		shrimpList.clear();
+	}
 
 	
 }

@@ -51,7 +51,11 @@ public class Sushi extends Sprite {
 	}
 	
 	public void setSpeed(double s) {
-		this.speed = s;
+		if (s >= 0) {
+			this.speed = s;
+		} else {
+			this.speed = 0.2;
+		}
 	}
 	
 	public void setNumFish(double n) {
