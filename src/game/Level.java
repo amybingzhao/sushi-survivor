@@ -33,18 +33,18 @@ public abstract class Level {
 	private static final double INIT_SPRITE_SPEED = 2.0;
 	private Timer myUpdateSpeedTimer;
 	private GraphicsContext myGc;
-	public Scene myScene;
+	private Scene myScene;
 	public Sushi sushi;
 	private ArrayList<String> myInput;
-	public double spriteSpeed;
+	private double spriteSpeed;
 	private Stage myStage;
 	private Canvas myCanvas;
-	public boolean gameOver;
-	public boolean win;
-	public boolean start;
-	public boolean stopLevel;
+	private boolean gameOver;
+	private boolean win;
+	private boolean start;
+	private boolean stopLevel;
 	private Group myRoot;
-	protected Label scoreLabel;
+	private Label scoreLabel;
 	
 	public void init(Stage stage) {
 		myStage = stage;
@@ -62,11 +62,11 @@ public abstract class Level {
 			public void handle(long currentNanoTime) {
 				if (start == true) {
 					readyLabel.setText("");;
-					if (stopLevel == true) {
+					if (isStopLevel() == true) {
 						myUpdateSpeedTimer.cancel();
 						myUpdateSpeedTimer.purge();
 						stop();
-						if (gameOver == true) {
+						if (isGameOver() == true) {
 							gameOver();
 						}
 					}
@@ -96,17 +96,26 @@ public abstract class Level {
 		return myGc;
 	}
 	
+	private Scene getMyScene() {
+		return myScene;
+	}
+	
+	protected double getSpriteSpeed() {
+		return spriteSpeed;
+	}
+	
+	
 	private void initLevelState() {
 		myInput = new ArrayList<String>();
 		spriteSpeed = INIT_SPRITE_SPEED;
-		scoreLabel = new Label("Score: " + Integer.toString((int) sushi.numFish));
-		scoreLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		scoreLabel.setAlignment(Pos.TOP_LEFT);
-		myRoot.getChildren().add(scoreLabel);
+		setScoreLabel(new Label("Score: " + Integer.toString((int) sushi.numFish)));
+		getScoreLabel().setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		getScoreLabel().setAlignment(Pos.TOP_LEFT);
+		myRoot.getChildren().add(getScoreLabel());
 		start = false;
-		gameOver = false;
+		setGameOver(false);
 		win = false;
-		stopLevel = false;
+		setStopLevel(false);
 	}
 	
 	private void checkForReady() {
@@ -289,5 +298,37 @@ public abstract class Level {
 		gameOverLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 35));
 		gameOverLabel.setTextFill(Color.GRAY);
 		return gameOverLabel;
+	}
+
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+	
+	public boolean hasWon() {
+		return win;
+	}
+	
+	public void setWin(boolean win) {
+		this.win = win;
+	}
+
+	public boolean isStopLevel() {
+		return stopLevel;
+	}
+
+	public void setStopLevel(boolean stopLevel) {
+		this.stopLevel = stopLevel;
+	}
+
+	public Label getScoreLabel() {
+		return scoreLabel;
+	}
+
+	public void setScoreLabel(Label scoreLabel) {
+		this.scoreLabel = scoreLabel;
 	}
 }

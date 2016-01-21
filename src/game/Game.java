@@ -31,8 +31,8 @@ import javafx.util.Duration;
 
 public class Game {
 	public static final String TITLE = "Sushi Survivor: Survival of the Sushiest";
-	//private static final int LEVEL_DURATION = 10 * 1000;
-	private static final int LEVEL_DURATION = 2 * 1000 * 60;
+	private static final int LEVEL_DURATION = 10 * 1000;
+	//private static final int LEVEL_DURATION = 2 * 1000 * 60;
 	private Timer myLevelTimer;
 	private Level myLevel;
 	private Stage myStage;
@@ -71,9 +71,9 @@ public class Game {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					public void run() {
-						System.out.println("level's game over status: " + String.valueOf(myLevel.gameOver));
-						if (myLevel.gameOver == false) {
-							myLevel.stopLevel = true;
+						System.out.println("level's game over status: " + String.valueOf(myLevel.isGameOver()));
+						if (myLevel.isGameOver() == false) {
+							myLevel.setStopLevel(true);
 							double numStartingFish = myLevel.sushi.numFish;
 							startLevel(new CustomerLevel(numStartingFish), myStage);
 							scheduleCustomerLevelTimer();
@@ -101,12 +101,12 @@ public class Game {
 	};
 	
 	public void endGame() {
-		myLevel.stopLevel = true;
-		myLevel.gameOver = true;
+		myLevel.setStopLevel(true);
+		myLevel.setGameOver(true);
 		if (myLevel.sushi.numFish > 0) {
-			myLevel.win = true;
+			myLevel.setWin(true);
 		} else {
-			myLevel.win = false;
+			myLevel.setWin(false);
 		}
 		myLevel.gameOver();
 	}

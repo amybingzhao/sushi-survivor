@@ -35,7 +35,7 @@ public class TableLevel extends Level {
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
 			double curX = s.posX;
-			s.posX = curX - spriteSpeed;
+			s.posX = curX - this.getSpriteSpeed();
 			s.render(this.getGraphicsContext());
 		}
 	}
@@ -46,9 +46,9 @@ public class TableLevel extends Level {
 		if(checkSpriteCollisions(knifeList)) {
 			knifeList.clear();
 			shrimpList.clear();
-			gameOver = true;
-			win = false;
-			stopLevel = true;
+			setGameOver(true);
+			super.setWin(false);
+			setStopLevel(true);
 			System.out.println("game over");
 		}
 		if (checkSpriteCollisions(shrimpList)) {
@@ -57,11 +57,17 @@ public class TableLevel extends Level {
 		}
 	}
 
+	public void setGameOver(boolean gameOver) {
+		if (gameOver) {
+			super.setGameOver(true);
+		}
+	}
+	
 	@Override
 	protected void updateSushiAndScore() {
 		// TODO Auto-generated method stub
 		sushi.numFish++;
-		scoreLabel.setText("Score: " + Integer.toString((int) sushi.numFish));
+		getScoreLabel().setText("Score: " + Integer.toString((int) sushi.numFish));
 		System.out.println("numFish = " + sushi.numFish);
 	}
 

@@ -50,7 +50,7 @@ public class CustomerLevel extends Level {
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
 			double curY = s.posY;
-			s.posY = curY + spriteSpeed;
+			s.posY = curY + this.getSpriteSpeed();
 			s.render(this.getGraphicsContext());
 		}
 	}
@@ -58,10 +58,10 @@ public class CustomerLevel extends Level {
 	private void moveChopsticks() {
 		if (chopsticks.posY <= 0 - chopsticks.height) {
 			chopsticks.posX = sushi.posX;
-			chopstickDirection = spriteSpeed * DOWNWARDS;
+			chopstickDirection = this.getSpriteSpeed() * DOWNWARDS;
 		}
 		else if (chopsticks.posY >= this.getCanvasHeight() - chopsticks.height - sushi.height + 1) {
-			chopstickDirection = spriteSpeed * UPWARDS;
+			chopstickDirection = this.getSpriteSpeed() * UPWARDS;
 		}
 		chopsticks.posY = chopsticks.posY + chopstickDirection;
 		chopsticks.render(this.getGraphicsContext());
@@ -84,7 +84,10 @@ public class CustomerLevel extends Level {
 	protected void updateSushiAndScore() {
 		// TODO Auto-generated method stub
 		sushi.numFish = sushi.numFish - 2;
-		scoreLabel.setText("Score: " + Integer.toString((int) sushi.numFish));
+		if (sushi.numFish <= 0) {
+			super.setGameOver(true);
+		}
+		getScoreLabel().setText("Score: " + Integer.toString((int) sushi.numFish));
 		System.out.println("numFish = " + sushi.numFish);	
 	}
 
