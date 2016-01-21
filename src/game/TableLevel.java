@@ -7,8 +7,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class TableLevel extends Level {
-	public ArrayList<Sprite> knifeList = new ArrayList<Sprite>();
-	public ArrayList<Sprite> shrimpList = new ArrayList<Sprite>();
+	private ArrayList<Sprite> knifeList = new ArrayList<Sprite>();
+	private ArrayList<Sprite> shrimpList = new ArrayList<Sprite>();
 	private static final String TABLE_BACKGROUND_IMAGE = "tableBackground.png";
 	private static final String KNIFE_IMAGE = "knife.png";
 	private static final String SHRIMP_IMAGE = "shrimp.png";

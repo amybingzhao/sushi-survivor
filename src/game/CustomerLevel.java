@@ -9,8 +9,8 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.stage.Stage;
 
 public class CustomerLevel extends Level {
-	public ArrayList<Sprite> soySauceList = new ArrayList();
-	public Sprite chopsticks = new Sprite();
+	private ArrayList<Sprite> soySauceList = new ArrayList();
+	private Sprite chopsticks = new Sprite();
 	private double chopstickDirection;
 	private final double UPWARDS = -1;
 	private final double DOWNWARDS = 1;
