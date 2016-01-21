@@ -12,6 +12,5 @@ public class Main extends Application {
 		Game myGame = new Game();
 		theStage.setTitle(myGame.getTitle());
 		myGame.showSplash(theStage);
-		//myGame.init(theStage);
 	}	
 }

@@ -23,7 +23,6 @@ public class TableLevel extends Level {
 
 	@Override
 	protected void populateSceneWithSprites() {
-		// TODO Auto-generated method stub
 		addBackground(TABLE_BACKGROUND_IMAGE);
 		this.getSushi().render(this.getGraphicsContext());
 		populateSpriteArrayList(KNIFE_IMAGE, knifeList);
@@ -31,7 +30,6 @@ public class TableLevel extends Level {
 	}
 
 	public void moveSpritesForward(ArrayList<Sprite> sprites) {
-		// TODO Auto-generated method stub
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
 			double curX = s.getPosX();
@@ -42,7 +40,6 @@ public class TableLevel extends Level {
 
 	@Override
 	protected void checkListCollisions() {
-		// TODO Auto-generated method stub
 		if(checkSpriteCollisions(knifeList)) {
 			knifeList.clear();
 			shrimpList.clear();
@@ -65,7 +62,6 @@ public class TableLevel extends Level {
 	
 	@Override
 	protected void updateSushiAndScore() {
-		// TODO Auto-generated method stub
 		this.getSushi().setNumFish(this.getSushi().getNumFish() + 1);
 		getScoreLabel().setText("Score: " + Integer.toString((int) this.getSushi().getNumFish()));
 		System.out.println("numFish = " + this.getSushi().getNumFish());
@@ -73,7 +69,6 @@ public class TableLevel extends Level {
 
 	@Override
 	protected void updateCanvas() {
-		// TODO Auto-generated method stub
 		addBackground("tableBackground.png");
 		moveSpritesForward(knifeList);
 		replaceOutOfBoundsSprites(knifeList, KNIFE_IMAGE);
@@ -83,24 +78,20 @@ public class TableLevel extends Level {
 	
 	@Override
 	protected double generateRandomX(Sprite sprite) {
-		// TODO Auto-generated method stub
 		return (this.getCanvasWidth()/3) + (this.getCanvasWidth() - sprite.getWidth()) * Math.random();
 	}
 
 	@Override
 	protected double generateRandomY(Sprite sprite) {
-		// TODO Auto-generated method stub
 		return (this.getCanvasHeight() - sprite.getHeight()) * Math.random();
 	}
 
 	@Override
 	protected boolean outOfBounds(Sprite s) {
-		// TODO Auto-generated method stub
 		return (s.getPosX() + s.getWidth()) < 0;
 	}
 	@Override
 	protected String getInstructions() {
-		// TODO Auto-generated method stub
 		return "Use the arrow keys to move.\nCollect shrimp and dodge the knives!\nIf you get hit by a knife then it's game over.";
 	}
 	@Override

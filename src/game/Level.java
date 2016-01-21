@@ -19,6 +19,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -45,10 +46,12 @@ public abstract class Level {
 	private boolean stopLevel;
 	private Group myRoot;
 	private Label scoreLabel;
+	private Game myGame;
 	
-	public void init(Stage stage) {
+	public void init(Stage stage, Game game) {
 		myStage = stage;
 		myRoot = new Group();
+		myGame = game;
 		initScene(myRoot);
 		populateSceneWithSprites();
 		initLevelState();
@@ -195,7 +198,6 @@ public abstract class Level {
 	}
 
 	public Sprite generateSprite(String filename) {
-		// TODO Auto-generated method stub
 		Sprite sprite = new Sprite();
 		sprite.setImage(filename);
 		double x = generateRandomX(sprite);
@@ -268,23 +270,26 @@ public abstract class Level {
 		Group root = new Group();
 		initScene(root);
 		Label gameOverLabel = createGameOverLabel();
-		//Button playAgain = new Button();
-		String score = Integer.toString((int) sushi.getNumFish());
-		if (win == true) {
-			gameOverLabel.setText("You survived!\n" + "Score: " + score);
-			//playAgain.setText("Click to play again!");
-		} else {
-			gameOverLabel.setText("So close yet so far...\n" + "Score: " + score);
-			//playAgain.setText("Click to try again!");
-		}
-		//playAgain.setContentDisplay(ContentDisplay.BOTTOM);;
-		root.getChildren().addAll(gameOverLabel);
+		Button restart = createRestartButton();
+		root.getChildren().addAll(gameOverLabel, restart);
 		myScene.setFill(Color.GRAY);
 		myStage.setScene(myScene);
 		myStage.show();
-		//Platform.exit();
 	}
 	
+	private Button createRestartButton() {
+		Button restart = new Button();
+		restart.setText("Restart");
+		restart.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				myUpdateSpeedTimer.cancel();
+				myGame.init(myStage, new Game());
+			}
+		});
+		restart.setAlignment(Pos.CENTER);
+		return restart;
+	}
 	private Label createGameOverLabel() {
 		Label gameOverLabel = new Label();
 		gameOverLabel.setMinWidth(CANVAS_WIDTH);
@@ -293,6 +298,12 @@ public abstract class Level {
 		gameOverLabel.setTextAlignment(TextAlignment.CENTER);
 		gameOverLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 35));
 		gameOverLabel.setTextFill(Color.GRAY);
+		String score = Integer.toString((int) sushi.getNumFish());
+		if (win == true) {
+			gameOverLabel.setText("You survived!\n" + "Score: " + score);
+		} else {
+			gameOverLabel.setText("So close yet so far...\n" + "Score: " + score);
+		}
 		return gameOverLabel;
 	}
 
@@ -337,7 +348,6 @@ public abstract class Level {
 	}
 	
 	protected void checkInputForCheats(ArrayList<String> input) {
-		// TODO Auto-generated method stub
 				if (input.contains("Q")) {
 					clearLists();
 				}

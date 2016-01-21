@@ -28,7 +28,6 @@ public class Chopsticks extends Sprite {
 			chopstickDirection = speed * UPWARDS;
 		}
 		this.setPosY(this.getPosY() + chopstickDirection);
-		//chopsticks.render(this.getGraphicsContext());
 	}
 }
 

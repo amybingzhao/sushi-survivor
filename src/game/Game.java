@@ -40,10 +40,11 @@ public class Game {
 	private ProgressBar loadProgress;
 	private static final int SPLASH_WIDTH = 500;
 	private static final int SPLASH_HEIGHT = 250;
-	//private Pane splashLayout;
 	private Group splashLayout;
 	private static final String SPLASH_IMAGE = "splashBackground.jpg";
 	private static final int BOTTOM_BORDER = 35;
+	private Game myGame;
+	
 	/*
 	 * Returns the title of the game.
 	 */
@@ -51,16 +52,20 @@ public class Game {
 		return TITLE;
 	}
 
-	public void init(Stage stage) {
+	public void init(Stage stage, Game game) {
+		if (myLevelTimer != null) {
+			myLevelTimer.cancel();
+		}
 		myStage = stage;
+		myGame = game;
 		scheduleTableLevelTimer();
-		startLevel(new TableLevel((double) 0), myStage);
+		startLevel(new TableLevel((double) 0), myStage, this);
 		myStage.show();
 	}
 
-	public void startLevel(Level level, Stage stage) {
+	public void startLevel(Level level, Stage stage, Game game) {
 		myLevel = level;
-		level.init(stage);
+		level.init(stage, game);
 		myStage.setScene(level.getScene());
 	}
 
@@ -75,7 +80,7 @@ public class Game {
 						if (myLevel.isGameOver() == false) {
 							myLevel.setStopLevel(true);
 							double numStartingFish = myLevel.getSushi().getNumFish();
-							startLevel(new CustomerLevel(numStartingFish), myStage);
+							startLevel(new CustomerLevel(numStartingFish), myStage, myGame);
 							scheduleCustomerLevelTimer();
 							System.out.println("level timer stopped");
 						}
@@ -116,7 +121,6 @@ public class Game {
 
 			@Override
 			protected ObservableList<String> call() throws Exception {
-				// TODO Auto-generated method stub
 				ObservableList<String> tasksToLoad = FXCollections.observableArrayList(
 						"Generating backgrounds", "Loading sprites", "Creating sushi", "Loading levels"
 						);
@@ -152,7 +156,7 @@ public class Game {
 	
 	private void hideStageAndInitGame(Stage stage) {
 		stage.hide();
-		init(new Stage());
+		init(new Stage(), new Game());
 	}
 	
 	public void generateSplash(Stage stage, Task<?> task, InitCompletionHandler initCompletionHandler) {
@@ -163,9 +167,9 @@ public class Game {
                 loadProgress.progressProperty().unbind();
                 loadProgress.setProgress(1);
                 stage.toFront();
-                /**/
+               
                 initCompletionHandler.complete();
-            } // todo add code to gracefully handle other task states.
+            }
         });
 		
 		stage.show();	
@@ -183,7 +187,6 @@ public class Game {
 	
 	public Scene createSplashScene(Stage stage) {
 		ImageView splash = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(SPLASH_IMAGE)));
-		//splashLayout = new VBox();
 		splashLayout = new Group();
 		splashLayout.setEffect(new DropShadow());
 		loadProgress = new ProgressBar();
