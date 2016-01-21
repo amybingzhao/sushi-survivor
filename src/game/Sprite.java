@@ -14,7 +14,7 @@ public class Sprite {
 	public double width;
 	
 	public void setImage(String filename) {
-		image = new Image(filename);
+		image = new Image(getClass().getClassLoader().getResourceAsStream(filename));
 		height = image.getHeight();
 		width = image.getWidth();
 	}

@@ -20,8 +20,8 @@ public class CustomerLevel extends Level {
 	
 	// TODO: create constructor with sushi or numFish or something
 	public CustomerLevel(double numStartingFish) {
-		sushi = new Sushi(CANVAS_WIDTH/2, CANVAS_HEIGHT, 0);//NEED TO RETAIN NUM FISH SOMEHOW
-		sushi.posY = CANVAS_HEIGHT - sushi.height;
+		sushi = new Sushi(this.getCanvasWidth()/2, this.getCanvasHeight(), 0);//NEED TO RETAIN NUM FISH SOMEHOW
+		sushi.posY = this.getCanvasHeight() - sushi.height;
 		sushi.numFish = numStartingFish;
 	}
 	
@@ -33,16 +33,16 @@ public class CustomerLevel extends Level {
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
 		addBackground(CUSTOMER_BACKGROUND_IMAGE);
-		sushi.render(myGc);
+		sushi.render(this.getGraphicsContext());
 		initChopsticks();
 		populateSpriteArrayList(SOYSAUCE_IMAGE, soySauceList);
 	}
 	
 	private void initChopsticks() {
 		chopsticks.setImage(CHOPSTICKS_IMAGE);
-		chopsticks.posX = CANVAS_WIDTH/2;
+		chopsticks.posX = this.getCanvasWidth()/2;
 		chopsticks.posY = 0 - chopsticks.height;
-		chopsticks.render(myGc);
+		chopsticks.render(this.getGraphicsContext());
 	}
 	
 	public void moveSpritesForward(ArrayList<Sprite> sprites) {
@@ -51,7 +51,7 @@ public class CustomerLevel extends Level {
 			Sprite s = sprites.get(i);
 			double curY = s.posY;
 			s.posY = curY + spriteSpeed;
-			s.render(myGc);
+			s.render(this.getGraphicsContext());
 		}
 	}
 	
@@ -60,11 +60,11 @@ public class CustomerLevel extends Level {
 			chopsticks.posX = sushi.posX;
 			chopstickDirection = spriteSpeed * DOWNWARDS;
 		}
-		else if (chopsticks.posY >= CANVAS_HEIGHT - chopsticks.height - sushi.height + 1) {
+		else if (chopsticks.posY >= this.getCanvasHeight() - chopsticks.height - sushi.height + 1) {
 			chopstickDirection = spriteSpeed * UPWARDS;
 		}
 		chopsticks.posY = chopsticks.posY + chopstickDirection;
-		chopsticks.render(myGc);
+		chopsticks.render(this.getGraphicsContext());
 	}
 
 	@Override
@@ -100,19 +100,19 @@ public class CustomerLevel extends Level {
 	@Override
 	protected double generateRandomX(Sprite sprite) {
 		// TODO Auto-generated method stub
-		return (CANVAS_WIDTH - sprite.width) * Math.random();
+		return (this.getCanvasWidth() - sprite.width) * Math.random();
 	}
 
 	@Override
 	protected double generateRandomY(Sprite sprite) {
 		// TODO Auto-generated method stub
-		return (CANVAS_HEIGHT - sprite.height - CANVAS_HEIGHT/3) * Math.random();
+		return (this.getCanvasHeight() - sprite.height - this.getCanvasHeight()/3) * Math.random();
 	}
 
 	@Override
 	protected boolean outOfBounds(Sprite s) {
 		// TODO Auto-generated method stub
-		return (s.height + s.posY) > CANVAS_HEIGHT;
+		return (s.height + s.posY) > this.getCanvasHeight();
 	}
 
 	@Override

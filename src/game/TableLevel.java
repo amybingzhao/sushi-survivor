@@ -14,7 +14,7 @@ public class TableLevel extends Level {
 	private static final String SHRIMP_IMAGE = "shrimp.png";
 	
 	public TableLevel (double numStartingFish) {
-		sushi = new Sushi(0, CANVAS_HEIGHT/2, 0);
+		sushi = new Sushi(0, this.getCanvasHeight()/2, 0);
 		sushi.numFish = numStartingFish;
 	}
 	public String toString() {
@@ -25,7 +25,7 @@ public class TableLevel extends Level {
 	protected void populateSceneWithSprites() {
 		// TODO Auto-generated method stub
 		addBackground(TABLE_BACKGROUND_IMAGE);
-		sushi.render(myGc);
+		sushi.render(this.getGraphicsContext());
 		populateSpriteArrayList(KNIFE_IMAGE, knifeList);
 		populateSpriteArrayList(SHRIMP_IMAGE, shrimpList);
 	}
@@ -36,7 +36,7 @@ public class TableLevel extends Level {
 			Sprite s = sprites.get(i);
 			double curX = s.posX;
 			s.posX = curX - spriteSpeed;
-			s.render(myGc);
+			s.render(this.getGraphicsContext());
 		}
 	}
 
@@ -78,13 +78,13 @@ public class TableLevel extends Level {
 	@Override
 	protected double generateRandomX(Sprite sprite) {
 		// TODO Auto-generated method stub
-		return (CANVAS_WIDTH/3) + (CANVAS_WIDTH - sprite.width) * Math.random();
+		return (this.getCanvasWidth()/3) + (this.getCanvasWidth() - sprite.width) * Math.random();
 	}
 
 	@Override
 	protected double generateRandomY(Sprite sprite) {
 		// TODO Auto-generated method stub
-		return (CANVAS_HEIGHT - sprite.height) * Math.random();
+		return (this.getCanvasHeight() - sprite.height) * Math.random();
 	}
 
 	@Override

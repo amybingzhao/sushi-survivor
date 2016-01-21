@@ -27,12 +27,12 @@ import javafx.stage.Stage;
 
 public abstract class Level {
 	private static final int NUM_SPRITES_PER_TYPE = 5;
-	protected static final int CANVAS_WIDTH = 1024;
-	protected static final int CANVAS_HEIGHT = 512;
+	private static final int CANVAS_WIDTH = 1024;
+	private static final int CANVAS_HEIGHT = 512;
 	private static final int UPDATE_DURATION = 10 * 1000;
 	private static final double INIT_SPRITE_SPEED = 2.0;
 	private Timer myUpdateSpeedTimer;
-	public GraphicsContext myGc;
+	private GraphicsContext myGc;
 	public Scene myScene;
 	public Sushi sushi;
 	private ArrayList<String> myInput;
@@ -84,7 +84,17 @@ public abstract class Level {
 		stage.setScene(myScene);
 	}
 	
+	protected int getCanvasHeight() {
+		return CANVAS_HEIGHT;
+	}
 	
+	protected int getCanvasWidth() {
+		return CANVAS_WIDTH;
+	}
+	
+	protected GraphicsContext getGraphicsContext() {
+		return myGc;
+	}
 	
 	private void initLevelState() {
 		myInput = new ArrayList<String>();
