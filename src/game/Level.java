@@ -27,12 +27,14 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public abstract class Level {
+	private static final int ONE_SECOND = 1000;
 	private static final int NUM_SPRITES_PER_TYPE = 5;
 	private static final int CANVAS_WIDTH = 1024;
 	private static final int CANVAS_HEIGHT = 512;
-	private static final int UPDATE_DURATION = 10 * 1000;
+	private static final int UPDATE_DURATION = 10 * ONE_SECOND;
 	private static final double INIT_SPRITE_SPEED = 2.0;
-	private static final int SPRITE_SPAWN_INTERVAL = 1 * 1000;
+	private static final int SPRITE_SPAWN_INTERVAL = ONE_SECOND;
+	private static final int CHEAT_DURATION = 2 * ONE_SECOND;
 	private Timer myUpdateSpeedTimer;
 	private Timer mySpriteSpawnTimer;
 	private GraphicsContext myGc;
@@ -181,6 +183,26 @@ public abstract class Level {
 				});
 			}
 		}, SPRITE_SPAWN_INTERVAL, SPRITE_SPAWN_INTERVAL);	
+	}
+	
+	private void scheduleCheatTimer(String cheat, double origSpeed, Level curLevel) {
+		Timer cheatTimer = new Timer();
+		cheatTimer.schedule(new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						if (cheat.equals("W")) {
+							curLevel.setSpriteSpeed(origSpeed);
+							System.out.println("cheat timer timed out on W, cur speed: " + Double.toString(curLevel.getSpriteSpeed()) + "orig speed: " + Double.toString(origSpeed));
+						} else if (cheat.equals("E")) {
+							curLevel.getSushi().setSpeed(origSpeed);
+							System.out.println("cheat timer timed out on E");
+						}
+						System.out.println("cheat timer timed out");
+					}
+				});
+			}
+		}, CHEAT_DURATION);	
 	}
 	
 	private void initScene(Group root) {
@@ -376,12 +398,21 @@ public abstract class Level {
 					cancelTimers();
 					scheduleUpdateTimer();
 					scheduleSpriteTimer();
+					input.remove("Q");
 				}
 				if (input.contains("W")) {
-					this.setSpriteSpeed(this.getSpriteSpeed() - 2.0);
+					double curSpriteSpeed = this.getSpriteSpeed();
+					System.out.println("orig speed: " + Double.toString(curSpriteSpeed));
+					scheduleCheatTimer("W", curSpriteSpeed, this);
+					this.setSpriteSpeed(curSpriteSpeed- 2.0);
+					System.out.println("new speed: " + Double.toString(this.getSpriteSpeed()));
+					input.remove("W");
 				}
 				if (input.contains("E")) {
-					this.getSushi().setSpeed(this.getSushi().getSpeed() + 2.0);
+					double curSushiSpeed = this.getSushi().getSpeed();
+					scheduleCheatTimer("E", curSushiSpeed, this);
+					this.getSushi().setSpeed(this.getSushi().getSpeed() + 3.0);
+					input.remove("E");
 				}
 	}
 	
