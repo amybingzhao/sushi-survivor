@@ -398,7 +398,7 @@ public abstract class Level {
 	protected abstract void checkListCollisions();
 	
 	/*
-	 * Checks a given arraylist for collisions with the sushi sprite.
+	 * Checks a given arraylist for collisions with the Sushi sprite.
 	 */
 	public boolean checkSpriteCollisions(ArrayList<Sprite> sprites) {
 		for (int i = 0; i < sprites.size(); i++) {

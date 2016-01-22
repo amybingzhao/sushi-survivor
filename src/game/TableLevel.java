@@ -25,15 +25,23 @@ public class TableLevel extends Level {
 	private ImageView myBackground;
 	private static final String LEVEL_NAME = "Table Level";
 	private static final long ONE_SECOND = 1000;
+	private static final double END_OF_BACKGROUND = -2048.0;
 	
 	public TableLevel (double numStartingFish) {
 		this.setSushi(new Sushi(0, this.getCanvasHeight()/2, 0));
 		this.getSushi().setNumFish(numStartingFish);
 	}
+	
+	/*
+	 * Returns the name of this level.
+	 */
 	public String toString() {
 		return LEVEL_NAME;
 	}
 
+	/*
+	 * Populates the empty scene with initial knife and shrimp sprites.
+	 */
 	@Override
 	protected void populateSceneWithSprites() {
 		this.getSushi().render(this.getGraphicsContext());
@@ -41,6 +49,9 @@ public class TableLevel extends Level {
 		populateSpriteArrayList(SHRIMP_IMAGE, shrimpList);
 	}
 
+	/*
+	 * Moves an arraylist of sprites to the left across the canvas.
+	 */
 	public void moveSpritesForward(ArrayList<Sprite> sprites) {
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
@@ -50,6 +61,9 @@ public class TableLevel extends Level {
 		}
 	}
 
+	/*
+	 * Checks and handles all sprite arraylists for the level for collisions with the Sushi sprite.
+	 */
 	@Override
 	protected void checkListCollisions() {
 		if(checkSpriteCollisions(knifeList)) {
@@ -63,53 +77,84 @@ public class TableLevel extends Level {
 			updateSushiAndScore();
 		}
 	}
-
+	
+	/*
+	 * Sets whether or not the game is over.
+	 */
 	public void setGameOver(boolean gameOver) {
 		if (gameOver) {
 			super.setGameOver(true);
 		}
 	}
 	
+	/*
+	 * Updates the sushi's number of fish and the player's score.
+	 */
 	@Override
 	protected void updateSushiAndScore() {
 		this.getSushi().setNumFish(this.getSushi().getNumFish() + 1);
 		getScoreLabel().setText("Score: " + Integer.toString((int) this.getSushi().getNumFish()));
 	}
-
+	
+	/*
+	 * Updates the contents of the canvas. If the end of the table has been reached, transition to next level.
+	 */
 	@Override
 	protected void updateCanvas() {
 		this.getBackground().setTranslateX(this.getBackground().getTranslateX() - 0.5);
-		if (this.getBackground().getTranslateX() == -2048.0) {
+		if (this.getBackground().getTranslateX() == END_OF_BACKGROUND) {
 			this.setStopLevel(true);
 			Label transLabel = createLevelTransitionMessage();
 			this.getRoot().getChildren().add(transLabel);
-			scheduleInputTimer(this.getInput(), this);
+			scheduleReadyTimer(this.getInput(), this);
 		}
 		moveSpritesForward(knifeList);
 		moveSpritesForward(shrimpList);
 	}
+	
+	/*
+	 * Generates a random x-coordinate position for a given sprite in the right 2/3s of the canvas.
+	 */
 	@Override
 	protected double generateRandomX(Sprite sprite) {
 		return (this.getCanvasWidth()/3) + (this.getCanvasWidth() - sprite.getWidth()) * Math.random();
 	}
-
+	
+	/*
+	 * Generates a random y-coordinate position for a given sprite anywhere on the canvas.
+	 */
 	@Override
 	protected double generateRandomY(Sprite sprite) {
 		return (this.getCanvasHeight() - sprite.getHeight()) * Math.random();
 	}
 
+	/*
+	 * Returns true if sprite has moved out of bounds of the canvas.
+	 */
 	@Override
 	protected boolean outOfBounds(Sprite s) {
 		return (s.getPosX() + s.getWidth()) < 0;
 	}
+	
+	/* 
+	 * Returns the instructions for the Table Level.
+	 */
 	@Override
 	protected String getInstructions() {
 		return "Use the arrow keys to move.\nCollect shrimp and dodge the knives!\nIf you get hit by a knife then it's game over.";
 	}
+	
+	/*
+	 * Clears the obstacles of this level (the knives).
+	 */
 	@Override
 	protected void clearObstacles() {
 		knifeList.clear();
 	}
+	
+	/*
+	 * Replaces sprites so that NUM_SPRITES_PER_TYPE of sprites are always present for each type.
+	 */
 	@Override
 	protected void replaceSprites() {
 		// TODO Auto-generated method stub
@@ -119,10 +164,16 @@ public class TableLevel extends Level {
 		addSpritesToGetNumSpritesPerType(shrimpList, SHRIMP_IMAGE);
 	}
 
+	/*
+	 * Returns the file name of the background image for the Table Level.
+	 */
 	public String getBackgroundImageName() {
 		return TABLE_BACKGROUND_IMAGE;
 	}
 	
+	/*
+	 * Creates the message that's shown at the end of the Table Level.
+	 */
 	public Label createLevelTransitionMessage() {
 		Label transLabel = new Label("You made it across the table!\nNow you just have to make it past the hungry customer.\n\nPress ENTER to continue. Good luck!");
 		transLabel.setWrapText(true);
@@ -134,13 +185,19 @@ public class TableLevel extends Level {
 		return transLabel;
 	}
 	
+	/*
+	 * Returns true if player has indicated he/she is ready for the next level.
+	 */
 	private boolean readyForNextLevel(ArrayList<String> input) {
 		return input.contains("ENTER");
 	}
 	
-	private void scheduleInputTimer(ArrayList<String> input, Level curLevel) {
-			Timer inputTimer = new Timer();
-			inputTimer.schedule(new TimerTask() {
+	/*
+	 * Schedules a timer to check for player input to indicate they're ready for the next level.
+	 */
+	private void scheduleReadyTimer(ArrayList<String> input, Level curLevel) {
+			Timer readyTimer = new Timer();
+			readyTimer.schedule(new TimerTask() {
 				public void run() {
 					Platform.runLater(new Runnable() {
 						public void run() {
@@ -148,7 +205,7 @@ public class TableLevel extends Level {
 								input.remove("ENTER");
 								curLevel.getMyGame().switchToCustomerLevel();
 							} else {
-								scheduleInputTimer(input, curLevel);
+								scheduleReadyTimer(input, curLevel);
 							}
 						}
 					});

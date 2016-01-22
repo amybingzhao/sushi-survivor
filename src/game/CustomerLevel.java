@@ -30,7 +30,10 @@ public class CustomerLevel extends Level {
 		s.setPosY(this.getCanvasHeight() - s.getHeight() - BOTTOM_BORDER);
 		s.setNumFish(numStartingFish);
 	}
-	
+
+	/*
+	 * Returns the name of this level.
+	 */
 	public String toString() {
 		return LEVEL_NAME;
 	}
