@@ -624,4 +624,13 @@ public abstract class Level {
 		}
 	}
 
+	public void moveSpritesForward(ArrayList<Sprite> sprites) {
+		for (int i = 0; i < sprites.size(); i++) {
+			Sprite s = sprites.get(i);
+			double curX = s.getPosX();
+			s.setPosX(curX - this.getSpriteSpeed());
+			s.render(this.getGraphicsContext());
+		}
+	}
+
 }
