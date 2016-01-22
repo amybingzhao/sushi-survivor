@@ -32,7 +32,6 @@ import javafx.util.Duration;
 public class Game {
 	private static final String TITLE = "Sushi Survivor: Survival of the Sushiest";
 	private static final int LEVEL_DURATION = 20 * 1000;
-	//private static final int LEVEL_DURATION = 2 * 1000 * 60;
 	private Timer myLevelTimer;
 	private Level myLevel;
 	private Stage myStage;
@@ -44,6 +43,7 @@ public class Game {
 	private static final String SPLASH_IMAGE = "splashBackground.jpg";
 	private static final int BOTTOM_BORDER = 35;
 	private Game myGame;
+	private boolean gameInit = false;
 	
 	/*
 	 * Returns the title of the game.
@@ -69,40 +69,41 @@ public class Game {
 	}
 	
 	public void switchToCustomerLevel() {
-		System.out.println("level's game over status: " + String.valueOf(myLevel.isGameOver()));
 		if (myLevel.isGameOver() == false) {
-			myLevel.setStopLevel(true);
 			double numStartingFish = myLevel.getSushi().getNumFish();
 			startLevel(new CustomerLevel(numStartingFish), myStage, myGame);
-			scheduleCustomerLevelTimer();
-			System.out.println("level timer stopped");
 		}
 	}
 
-	public void scheduleCustomerLevelTimer() {
+	public Timer getLevelTimer() {
+		return myLevelTimer;
+	}
+	
+	public void scheduleCustomerLevelTimer(Level level) {
 		myLevelTimer = new Timer();
 
 		myLevelTimer.schedule(new TimerTask() {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					public void run() {
-						endGame();
-						System.out.println("customer timer stopped");
+						System.out.println("customer level timed out");
+						level.setGameOver(true);
+						endGame(level);
 					}
 				});
 			}
 		}, LEVEL_DURATION);
 	};
 	
-	public void endGame() {
-		myLevel.setStopLevel(true);
-		myLevel.setGameOver(true);
-		if (myLevel.getSushi().getNumFish() > 0) {
-			myLevel.setWin(true);
+	public void endGame(Level level) {
+		System.out.println(level.toString());
+		level.setStopLevel(true);
+		if (level.getSushi().getNumFish() > 0) {
+			level.setWin(true);
 		} else {
-			myLevel.setWin(false);
+			level.setWin(false);
 		}
-		myLevel.gameOver();
+		level.gameOver();
 	}
 	
 	public void showSplash(Stage stage) {
@@ -145,7 +146,10 @@ public class Game {
 	
 	private void hideStageAndInitGame(Stage stage) {
 		stage.hide();
-		init(new Stage(), new Game());
+		if (gameInit == false) {
+			gameInit = true;
+			init(new Stage(), new Game());
+		}
 	}
 	
 	public void generateSplash(Stage stage, Task<?> task, InitCompletionHandler initCompletionHandler) {
@@ -165,7 +169,6 @@ public class Game {
 	}
 	
 	public void createReadyMessage() {
-		System.out.println("trying to show this");
 		Label readyLabel = new Label("Press any key to start!");
 		readyLabel.setMinWidth(SPLASH_WIDTH);
 		readyLabel.setMinHeight(SPLASH_HEIGHT-BOTTOM_BORDER);

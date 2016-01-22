@@ -80,6 +80,10 @@ public abstract class Level {
 						stop();
 						if (isGameOver() == true) {
 							gameOver();
+							System.out.println("here from " + this.toString());
+							if (this.toString().equals(CUSTOMER_LEVEL_NAME)) {
+								myGame.getLevelTimer().cancel();
+							}
 						}
 					}
 					myGc.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -136,6 +140,10 @@ public abstract class Level {
 			start = true;
 			scheduleUpdateTimer();
 			scheduleSpriteTimer();
+			if (this.toString().equals(CUSTOMER_LEVEL_NAME)) {
+				System.out.println("scheudling customer timer");
+				myGame.scheduleCustomerLevelTimer(this);
+			}
 		}
 	}
 	
@@ -166,8 +174,8 @@ public abstract class Level {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					public void run() {
-						sushi.setSpeed(sushi.getSpeed() + 0.3);
-						spriteSpeed = spriteSpeed + 0.3;
+						sushi.setSpeed(sushi.getSpeed() + 0.5);
+						spriteSpeed = spriteSpeed + 0.5;
 						System.out.println("update timer timed out");
 					}
 				});
@@ -182,7 +190,6 @@ public abstract class Level {
 				Platform.runLater(new Runnable() {
 					public void run() {
 						replaceSprites();
-						System.out.println("sprite timer timed out");
 					}
 				});
 			}
@@ -202,7 +209,6 @@ public abstract class Level {
 							curLevel.getSushi().setSpeed(origSpeed);
 							System.out.println("cheat timer timed out on E");
 						}
-						System.out.println("cheat timer timed out");
 					}
 				});
 			}
@@ -212,12 +218,12 @@ public abstract class Level {
 	private void initScene(StackPane root) {
 		myRoot = root;
 		myScene = new Scene(myRoot);
+		System.out.println(getBackgroundImageName());
 		myBackground = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(getBackgroundImageName())));
 		myCanvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 		myRoot.getChildren().addAll(myBackground, myCanvas);
 		myRoot.setAlignment(Pos.TOP_LEFT);
 		myGc = myCanvas.getGraphicsContext2D();
-		System.out.println("inited scene");
 	}
 	
 	public void setupKeyEventHandler() {
@@ -315,6 +321,9 @@ public abstract class Level {
 		checkInputForCheats(myInput);
 	}
 	
+	protected ArrayList<String> getInput() {
+		return myInput;
+	}
 	protected abstract void updateCanvas();
 		
 	protected abstract void updateSushiAndScore();
@@ -397,6 +406,9 @@ public abstract class Level {
 		return scoreLabel;
 	}
 
+	public boolean getGameOver() {
+		return gameOver;
+	}
 	public void setScoreLabel(Label scoreLabel) {
 		this.scoreLabel = scoreLabel;
 	}
@@ -411,7 +423,7 @@ public abstract class Level {
 	
 	protected void checkInputForCheats(ArrayList<String> input) {
 				if (input.contains("Q")) {
-					clearLists();
+					clearObstacles();
 					cancelTimers();
 					scheduleUpdateTimer();
 					scheduleSpriteTimer();
@@ -431,12 +443,12 @@ public abstract class Level {
 				}
 				if (input.contains("SPACE") && this.toString().equals(TABLE_LEVEL_NAME)) {
 					input.remove("SPACE");
-					System.out.println("hi");
+					setStopLevel(true);
 					myGame.switchToCustomerLevel();
 				}
 	}
 	
-	protected abstract void clearLists();
+	protected abstract void clearObstacles();
 	
 	public double getSpriteSpeed() {
 		return spriteSpeed;

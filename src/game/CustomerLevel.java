@@ -63,7 +63,7 @@ public class CustomerLevel extends Level {
 			chopsticks.setPosX(this.getSushi().getPosX());
 			chopstickDirection = this.getSpriteSpeed() * DOWNWARDS;
 		}
-		else if (chopsticks.getPosY() >= this.getCanvasHeight() - chopsticks.getHeight() - this.getSushi().getHeight() + 1) {
+		else if (chopsticks.getPosY() >= this.getCanvasHeight() - chopsticks.getHeight() - this.getSushi().getHeight()) {
 			chopstickDirection = this.getSpriteSpeed() * UPWARDS;
 		}
 		chopsticks.setPosY(chopsticks.getPosY() + chopstickDirection);
@@ -74,9 +74,9 @@ public class CustomerLevel extends Level {
 	protected void checkListCollisions() {
 		if (checkSpriteCollisions(soySauceList)) {
 			this.getSushi().setSpeed(this.getSushi().getSpeed() - 0.5);
-			System.out.println("ran into soy sauce");
 		}
 		if (this.getSushi().intersects(chopsticks.getBoundary())) {
+			System.out.println("collided with chopsticks");
 			updateSushiAndScore();
 		}
 		
@@ -84,13 +84,18 @@ public class CustomerLevel extends Level {
 
 	@Override
 	protected void updateSushiAndScore() {
-		this.getSushi().setNumFish(this.getSushi().getNumFish() - 2);
-		if (this.getSushi().getNumFish() <= 0) {
-			super.setGameOver(true);
-		} else {
-			getScoreLabel().setText("Score: " + Integer.toString((int) this.getSushi().getNumFish()));
+		if (getGameOver() != true) {
+			this.getSushi().setNumFish(this.getSushi().getNumFish() - 2);
+			if (this.getSushi().getNumFish() <= 0) {
+				setGameOver(true);
+				getScoreLabel().setText("Score: 0");
+				this.getSushi().setNumFish(0);
+				getMyGame().getLevelTimer().cancel();
+				getMyGame().endGame(this);
+			} else {
+				getScoreLabel().setText("Score: " + Integer.toString((int) this.getSushi().getNumFish()));
+			}
 		}
-		System.out.println("numFish = " + this.getSushi().getNumFish());	
 	}
 
 	@Override
@@ -122,10 +127,8 @@ public class CustomerLevel extends Level {
 		return "Use the left and right arrow keys to move.\nSoy sauce will slow you down.\nThe customer's chopsticks will steal your shrimp!";
 	}
 
-	
-	//TODO: try a switch case maybe instead idk will that work if you just do it w/o breaks?
 	@Override
-	protected void clearLists() {
+	protected void clearObstacles() {
 		soySauceList.clear();
 	}
 

@@ -1,10 +1,19 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class TableLevel extends Level {
@@ -15,6 +24,7 @@ public class TableLevel extends Level {
 	private static final String SHRIMP_IMAGE = "shrimp.png";
 	private ImageView myBackground;
 	private static final String LEVEL_NAME = "Table Level";
+	private static final long ONE_SECOND = 1000;
 	
 	public TableLevel (double numStartingFish) {
 		this.setSushi(new Sushi(0, this.getCanvasHeight()/2, 0));
@@ -48,11 +58,9 @@ public class TableLevel extends Level {
 			setGameOver(true);
 			super.setWin(false);
 			setStopLevel(true);
-			System.out.println("game over");
 		}
 		if (checkSpriteCollisions(shrimpList)) {
 			updateSushiAndScore();
-			System.out.println("ran into shrimp");
 		}
 	}
 
@@ -66,21 +74,23 @@ public class TableLevel extends Level {
 	protected void updateSushiAndScore() {
 		this.getSushi().setNumFish(this.getSushi().getNumFish() + 1);
 		getScoreLabel().setText("Score: " + Integer.toString((int) this.getSushi().getNumFish()));
-		System.out.println("numFish = " + this.getSushi().getNumFish());
 	}
 
 	@Override
 	protected void updateCanvas() {
 		//addBackground("tableBackground.png");
+		System.out.println("still updating canvas from table level");
 		this.getBackground().setTranslateX(this.getBackground().getTranslateX() - 0.5);
 		if (this.getBackground().getTranslateX() == -2048.0) {
-			getMyGame().switchToCustomerLevel();
+			this.setStopLevel(true);
+			Label transLabel = createLevelTransitionMessage();
+			this.getRoot().getChildren().add(transLabel);
+			scheduleInputTimer(this.getInput(), this);
 		}
-		System.out.println(this.getBackground().getTranslateX());
+		//System.out.println(this.getBackground().getTranslateX());
 		moveSpritesForward(knifeList);
 		moveSpritesForward(shrimpList);
 	}
-	
 	@Override
 	protected double generateRandomX(Sprite sprite) {
 		return (this.getCanvasWidth()/3) + (this.getCanvasWidth() - sprite.getWidth()) * Math.random();
@@ -100,9 +110,8 @@ public class TableLevel extends Level {
 		return "Use the arrow keys to move.\nCollect shrimp and dodge the knives!\nIf you get hit by a knife then it's game over.";
 	}
 	@Override
-	protected void clearLists() {
+	protected void clearObstacles() {
 		knifeList.clear();
-		shrimpList.clear();
 	}
 	@Override
 	protected void replaceSprites() {
@@ -115,6 +124,40 @@ public class TableLevel extends Level {
 
 	public String getBackgroundImageName() {
 		return TABLE_BACKGROUND_IMAGE;
+	}
+	
+	public Label createLevelTransitionMessage() {
+		Label transLabel = new Label("You made it across the table!\nNow you just have to make it past the hungry customer.\n\nPress ENTER to continue. Good luck!");
+		transLabel.setWrapText(true);
+		transLabel.setMinWidth(getCanvasWidth());
+		transLabel.setMinHeight(getCanvasHeight());
+		transLabel.setAlignment(Pos.CENTER);
+		transLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
+		transLabel.setTextFill(Color.GRAY);
+		return transLabel;
+	}
+	
+	private boolean readyForNextLevel(ArrayList<String> input) {
+		return input.contains("ENTER");
+	}
+	
+	private void scheduleInputTimer(ArrayList<String> input, Level curLevel) {
+			Timer inputTimer = new Timer();
+			inputTimer.schedule(new TimerTask() {
+				public void run() {
+					Platform.runLater(new Runnable() {
+						public void run() {
+							if (readyForNextLevel(input)) {
+								input.remove("ENTER");
+								curLevel.getMyGame().switchToCustomerLevel();
+							} else {
+								scheduleInputTimer(input, curLevel);
+							}
+						}
+					});
+				}
+			}, ONE_SECOND, ONE_SECOND);	
+		
 	}
 	
 }
