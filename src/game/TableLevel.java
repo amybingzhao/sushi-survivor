@@ -71,9 +71,7 @@ public class TableLevel extends Level {
 	protected void updateCanvas() {
 		addBackground("tableBackground.png");
 		moveSpritesForward(knifeList);
-		replaceOutOfBoundsSprites(knifeList, KNIFE_IMAGE);
 		moveSpritesForward(shrimpList);
-		replaceOutOfBoundsSprites(shrimpList, SHRIMP_IMAGE);
 	}
 	
 	@Override
@@ -98,6 +96,14 @@ public class TableLevel extends Level {
 	protected void clearLists() {
 		knifeList.clear();
 		shrimpList.clear();
+	}
+	@Override
+	protected void replaceSprites() {
+		// TODO Auto-generated method stub
+		replaceOutOfBoundsSprites(knifeList, KNIFE_IMAGE);
+		replaceOutOfBoundsSprites(shrimpList, SHRIMP_IMAGE);
+		addSpritesToGetNumSpritesPerType(knifeList, KNIFE_IMAGE);
+		addSpritesToGetNumSpritesPerType(shrimpList, SHRIMP_IMAGE);
 	}
 
 	

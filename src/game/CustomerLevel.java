@@ -93,7 +93,6 @@ public class CustomerLevel extends Level {
 	protected void updateCanvas() {
 		addBackground(CUSTOMER_BACKGROUND_IMAGE);
 		moveSpritesForward(soySauceList);
-		replaceOutOfBoundsSprites(soySauceList, SOYSAUCE_IMAGE);
 		Sushi s = this.getSushi();
 		moveChopsticks();
 	}
@@ -124,6 +123,13 @@ public class CustomerLevel extends Level {
 	@Override
 	protected void clearLists() {
 		soySauceList.clear();
+	}
+
+	@Override
+	protected void replaceSprites() {
+		// TODO Auto-generated method stub
+		replaceOutOfBoundsSprites(soySauceList, SOYSAUCE_IMAGE);
+		addSpritesToGetNumSpritesPerType(soySauceList, SOYSAUCE_IMAGE);
 	}
 	
 }

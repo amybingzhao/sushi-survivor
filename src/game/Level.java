@@ -32,7 +32,9 @@ public abstract class Level {
 	private static final int CANVAS_HEIGHT = 512;
 	private static final int UPDATE_DURATION = 10 * 1000;
 	private static final double INIT_SPRITE_SPEED = 2.0;
+	private static final int SPRITE_SPAWN_INTERVAL = 1 * 1000;
 	private Timer myUpdateSpeedTimer;
+	private Timer mySpriteSpawnTimer;
 	private GraphicsContext myGc;
 	private Scene myScene;
 	private Sushi sushi;
@@ -66,8 +68,7 @@ public abstract class Level {
 				if (start == true) {
 					readyLabel.setText("");;
 					if (isStopLevel() == true) {
-						myUpdateSpeedTimer.cancel();
-						myUpdateSpeedTimer.purge();
+						cancelTimers();
 						stop();
 						if (isGameOver() == true) {
 							gameOver();
@@ -87,6 +88,12 @@ public abstract class Level {
 		stage.setScene(myScene);
 	}
 	
+	private void cancelTimers() {
+		myUpdateSpeedTimer.cancel();
+		myUpdateSpeedTimer.purge();
+		mySpriteSpawnTimer.cancel();
+		mySpriteSpawnTimer.purge();
+	}
 	protected int getCanvasHeight() {
 		return CANVAS_HEIGHT;
 	}
@@ -120,6 +127,7 @@ public abstract class Level {
 		if (myInput.contains("ENTER")) {
 			start = true;
 			scheduleUpdateTimer();
+			scheduleSpriteTimer();
 		}
 	}
 	
@@ -159,6 +167,20 @@ public abstract class Level {
 				});
 			}
 		}, UPDATE_DURATION, UPDATE_DURATION);	
+	}
+	
+	private void scheduleSpriteTimer() {
+		mySpriteSpawnTimer = new Timer();
+		mySpriteSpawnTimer.schedule(new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						replaceSprites();
+						System.out.println("sprite timer timed out");
+					}
+				});
+			}
+		}, SPRITE_SPAWN_INTERVAL, SPRITE_SPAWN_INTERVAL);	
 	}
 	
 	private void initScene(Group root) {
@@ -209,35 +231,36 @@ public abstract class Level {
 	protected abstract double generateRandomX(Sprite sprite);
 	protected abstract double generateRandomY(Sprite sprite);
 	
+	protected abstract void replaceSprites();
 	public void replaceOutOfBoundsSprites(ArrayList<Sprite> sprites, String filename) {
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
 			if (outOfBounds(s)) {
 				sprites.remove(i);
-				addMoreSprites(sprites, filename, 1);
+				addMoreSprites(sprites, filename);
 			}
-		}
-		// replace the ones that've been collided with:
-		// TODO: make into own method
-		int diff = NUM_SPRITES_PER_TYPE - sprites.size();
-		addMoreSprites(sprites, filename, diff);
+		}		
 	}
 	
+	public void addSpritesToGetNumSpritesPerType(ArrayList<Sprite> sprites, String filename) {
+		int diff = NUM_SPRITES_PER_TYPE - sprites.size();
+		if (diff > 0) {
+			addMoreSprites(sprites, filename);
+		}
+	}
 	protected abstract boolean outOfBounds(Sprite s);
 	
-	public void addMoreSprites(ArrayList<Sprite> sprites, String filename, int num) {
-		for (int i = 0; i < num; i++) {
-			Sprite s = generateSprite(filename);
-			switch (this.toString()) {
-				case "Table Level":
-					s.setPosX(CANVAS_WIDTH);
-					break;
-				case "Customer Level":
-					s.setPosY(0);
-			}
-			sprites.add(s);
-			s.render(myGc);
+	public void addMoreSprites(ArrayList<Sprite> sprites, String filename) {
+		Sprite s = generateSprite(filename);
+		switch (this.toString()) {
+		case "Table Level":
+			s.setPosX(CANVAS_WIDTH);
+			break;
+		case "Customer Level":
+			s.setPosY(0);
 		}
+		sprites.add(s);
+		s.render(myGc);
 	}
 	
 	protected abstract void checkListCollisions();
@@ -283,7 +306,7 @@ public abstract class Level {
 		restart.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				myUpdateSpeedTimer.cancel();
+				cancelTimers();
 				myGame.init(myStage, new Game());
 			}
 		});
@@ -350,6 +373,9 @@ public abstract class Level {
 	protected void checkInputForCheats(ArrayList<String> input) {
 				if (input.contains("Q")) {
 					clearLists();
+					cancelTimers();
+					scheduleUpdateTimer();
+					scheduleSpriteTimer();
 				}
 				if (input.contains("W")) {
 					this.setSpriteSpeed(this.getSpriteSpeed() - 2.0);
