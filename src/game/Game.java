@@ -52,6 +52,11 @@ public class Game {
 		return TITLE;
 	}
 
+	/*
+	 * Initializes the game.
+	 * @param: stage is the stage on which the game is to be played.
+	 * @param: game is the game that the level is a part of.????????????????????????????
+	 */
 	public void init(Stage stage, Game game) {
 		if (myLevelTimer != null) {
 			myLevelTimer.cancel();
@@ -62,23 +67,38 @@ public class Game {
 		myStage.show();
 	}
 
+	/* 
+	 * Starts the level.
+	 * @param: level is the level to be started.
+	 * @param: stage is the stage on which the level is to be played.
+	 * @param: game is the game that the level is a part of.
+	 */
 	public void startLevel(Level level, Stage stage, Game game) {
 		myLevel = level;
 		level.init(stage, game);
 		myStage.setScene(level.getScene());
 	}
 	
+	/*
+	 * Switches from current level to the Customer Level.
+	 */
 	public void switchToCustomerLevel() {
 		if (myLevel.isGameOver() == false) {
 			double numStartingFish = myLevel.getSushi().getNumFish();
 			startLevel(new CustomerLevel(numStartingFish), myStage, myGame);
 		}
 	}
-
+	
+	/*
+	 * Returns the timer for the level.
+	 */
 	public Timer getLevelTimer() {
 		return myLevelTimer;
 	}
 	
+	/*
+	 * Schedules the timer for the customer level. Once the timer expires, the game is over.
+	 */
 	public void scheduleCustomerLevelTimer(Level level) {
 		myLevelTimer = new Timer();
 
@@ -94,6 +114,9 @@ public class Game {
 		}, LEVEL_DURATION);
 	};
 	
+	/*
+	 * Sets the level state for ending the game.
+	 */
 	public void endGame(Level level) {
 		level.setStopLevel(true);
 		if (level.getSushi().getNumFish() > 0) {
@@ -104,6 +127,9 @@ public class Game {
 		level.gameOver();
 	}
 	
+	/*
+	 * Displays the splash screen for the game.
+	 */
 	public void showSplash(Stage stage) {
 		final Task<ObservableList<String>> loadTask = new Task<ObservableList<String>>() {
 
@@ -128,6 +154,9 @@ public class Game {
 		new Thread(loadTask).start();
 	}
 	
+	/*
+	 * Sets onKeyPressed to begin the game once the player indicates he or she is ready.
+	 */
 	public void waitForPlayerReady(Scene scene, Stage stage) {	
 		createReadyMessage();
 		scene.setOnKeyPressed(
@@ -142,6 +171,9 @@ public class Game {
 				});
 	}		
 	
+	/*
+	 * Hides the stage for the splash screen and initializes the game.
+	 */
 	private void hideStageAndInitGame(Stage stage) {
 		stage.hide();
 		if (gameInit == false) {
@@ -150,6 +182,9 @@ public class Game {
 		}
 	}
 	
+	/*
+	 * Generates the splash screen.
+	 */
 	public void generateSplash(Stage stage, Task<?> task, InitCompletionHandler initCompletionHandler) {
 		progressText.textProperty().bind(task.messageProperty());
 		loadProgress.progressProperty().bind(task.progressProperty());
@@ -166,6 +201,9 @@ public class Game {
 		stage.show();	
 	}
 	
+	/*
+	 * Creates the ready message for the splash screen.
+	 */
 	public void createReadyMessage() {
 		Label readyLabel = new Label("Press any key to start!");
 		readyLabel.setMinWidth(SPLASH_WIDTH);
@@ -175,6 +213,9 @@ public class Game {
         splashLayout.getChildren().add(readyLabel);
 	}
 	
+	/*
+	 * Initializes the scene for the splash screen.
+	 */
 	public Scene createSplashScene(Stage stage) {
 		ImageView splash = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(SPLASH_IMAGE)));
 		splashLayout = new Group();
