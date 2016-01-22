@@ -18,8 +18,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -48,15 +50,17 @@ public abstract class Level {
 	private boolean win;
 	private boolean start;
 	private boolean stopLevel;
-	private Group myRoot;
+	private StackPane myRoot;
 	private Label scoreLabel;
 	private Game myGame;
+	private ImageView myBackground;
 	
 	public void init(Stage stage, Game game) {
 		myStage = stage;
-		myRoot = new Group();
+		myStage.setWidth(CANVAS_WIDTH);
+		StackPane root = new StackPane();
 		myGame = game;
-		initScene(myRoot);
+		initScene(root);
 		populateSceneWithSprites();
 		initLevelState();
 		setupKeyEventHandler();
@@ -117,8 +121,8 @@ public abstract class Level {
 		spriteSpeed = INIT_SPRITE_SPEED;
 		setScoreLabel(new Label("Score: " + Integer.toString((int) sushi.getNumFish())));
 		getScoreLabel().setFont(Font.font("Arial", FontWeight.BOLD, 20));
-		getScoreLabel().setAlignment(Pos.TOP_LEFT);
 		myRoot.getChildren().add(getScoreLabel());
+		getScoreLabel().setAlignment(Pos.TOP_LEFT);
 		start = false;
 		setGameOver(false);
 		win = false;
@@ -133,10 +137,8 @@ public abstract class Level {
 		}
 	}
 	
-	public void addBackground(String filename) {
-//		BackgroundImage background = new BackgroundImage(new Image(filename), null, null, null, null);
-		Image background = new Image(getClass().getClassLoader().getResourceAsStream(filename));
-		myGc.drawImage(background, 0, 0);
+	public StackPane getRoot() {
+		return myRoot;
 	}
 	
 	public Label createReadyMessage() {
@@ -205,10 +207,13 @@ public abstract class Level {
 		}, CHEAT_DURATION);	
 	}
 	
-	private void initScene(Group root) {
-		myScene = new Scene(root);
+	private void initScene(StackPane root) {
+		myRoot = root;
+		myScene = new Scene(myRoot);
+		myBackground = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(getBackgroundImageName())));
 		myCanvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-		root.getChildren().add(myCanvas);
+		myRoot.getChildren().addAll(myBackground, myCanvas);
+		myRoot.setAlignment(Pos.TOP_LEFT);
 		myGc = myCanvas.getGraphicsContext2D();
 		System.out.println("inited scene");
 	}
@@ -230,6 +235,8 @@ public abstract class Level {
 					}
 				});
 	}
+	
+	protected abstract String getBackgroundImageName();
 	
 	protected abstract void populateSceneWithSprites();
 	
@@ -272,6 +279,9 @@ public abstract class Level {
 	}
 	protected abstract boolean outOfBounds(Sprite s);
 	
+	protected ImageView getBackground() {
+		return myBackground;
+	}
 	public void addMoreSprites(ArrayList<Sprite> sprites, String filename) {
 		Sprite s = generateSprite(filename);
 		switch (this.toString()) {
@@ -312,7 +322,7 @@ public abstract class Level {
 	}
 	
 	private void createGameOverScene() {
-		Group root = new Group();
+		StackPane root = new StackPane();
 		initScene(root);
 		Label gameOverLabel = createGameOverLabel();
 		Button restart = createRestartButton();
@@ -402,10 +412,8 @@ public abstract class Level {
 				}
 				if (input.contains("W")) {
 					double curSpriteSpeed = this.getSpriteSpeed();
-					System.out.println("orig speed: " + Double.toString(curSpriteSpeed));
 					scheduleCheatTimer("W", curSpriteSpeed, this);
 					this.setSpriteSpeed(curSpriteSpeed- 2.0);
-					System.out.println("new speed: " + Double.toString(this.getSpriteSpeed()));
 					input.remove("W");
 				}
 				if (input.contains("E")) {

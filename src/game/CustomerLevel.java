@@ -2,8 +2,11 @@ package game;
 
 import java.util.ArrayList;
 
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.stage.Stage;
@@ -17,12 +20,13 @@ public class CustomerLevel extends Level {
 	private static final String CHOPSTICKS_IMAGE = "chopsticks.png";
 	private final double UPWARDS = -1;
 	private final double DOWNWARDS = 1;
+	private static final double BOTTOM_BORDER = 5;
 	
 	// TODO: create constructor with sushi or numFish or something
 	public CustomerLevel(double numStartingFish) {
 		super.setSushi(new Sushi(this.getCanvasWidth()/2, this.getCanvasHeight(), 0));//NEED TO RETAIN NUM FISH SOMEHOW
 		Sushi s = this.getSushi();
-		s.setPosY(this.getCanvasHeight() - s.getHeight());
+		s.setPosY(this.getCanvasHeight() - s.getHeight() - BOTTOM_BORDER);
 		s.setNumFish(numStartingFish);
 	}
 	
@@ -32,7 +36,6 @@ public class CustomerLevel extends Level {
 
 	@Override
 	protected void populateSceneWithSprites() {
-		addBackground(CUSTOMER_BACKGROUND_IMAGE);
 		this.getSushi().render(this.getGraphicsContext());
 		initChopsticks();
 		populateSpriteArrayList(SOYSAUCE_IMAGE, soySauceList);
@@ -91,7 +94,7 @@ public class CustomerLevel extends Level {
 
 	@Override
 	protected void updateCanvas() {
-		addBackground(CUSTOMER_BACKGROUND_IMAGE);
+		//addBackground(CUSTOMER_BACKGROUND_IMAGE);
 		moveSpritesForward(soySauceList);
 		Sushi s = this.getSushi();
 		moveChopsticks();
@@ -130,6 +133,10 @@ public class CustomerLevel extends Level {
 		// TODO Auto-generated method stub
 		replaceOutOfBoundsSprites(soySauceList, SOYSAUCE_IMAGE);
 		addSpritesToGetNumSpritesPerType(soySauceList, SOYSAUCE_IMAGE);
+	}
+	
+	public String getBackgroundImageName() {
+		return CUSTOMER_BACKGROUND_IMAGE;
 	}
 	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class TableLevel extends Level {
@@ -12,6 +13,7 @@ public class TableLevel extends Level {
 	private static final String TABLE_BACKGROUND_IMAGE = "tableBackground.png";
 	private static final String KNIFE_IMAGE = "knife.png";
 	private static final String SHRIMP_IMAGE = "shrimp.png";
+	private ImageView myBackground;
 	
 	public TableLevel (double numStartingFish) {
 		this.setSushi(new Sushi(0, this.getCanvasHeight()/2, 0));
@@ -23,7 +25,6 @@ public class TableLevel extends Level {
 
 	@Override
 	protected void populateSceneWithSprites() {
-		addBackground(TABLE_BACKGROUND_IMAGE);
 		this.getSushi().render(this.getGraphicsContext());
 		populateSpriteArrayList(KNIFE_IMAGE, knifeList);
 		populateSpriteArrayList(SHRIMP_IMAGE, shrimpList);
@@ -69,7 +70,9 @@ public class TableLevel extends Level {
 
 	@Override
 	protected void updateCanvas() {
-		addBackground("tableBackground.png");
+		//addBackground("tableBackground.png");
+		this.getBackground().setTranslateX(this.getBackground().getTranslateX() - 0.5);
+		System.out.println(this.getBackground().getTranslateX());
 		moveSpritesForward(knifeList);
 		moveSpritesForward(shrimpList);
 	}
@@ -106,5 +109,8 @@ public class TableLevel extends Level {
 		addSpritesToGetNumSpritesPerType(shrimpList, SHRIMP_IMAGE);
 	}
 
+	public String getBackgroundImageName() {
+		return TABLE_BACKGROUND_IMAGE;
+	}
 	
 }
