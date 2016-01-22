@@ -76,7 +76,6 @@ public class CustomerLevel extends Level {
 			this.getSushi().setSpeed(this.getSushi().getSpeed() - 0.5);
 		}
 		if (this.getSushi().intersects(chopsticks.getBoundary())) {
-			System.out.println("collided with chopsticks");
 			updateSushiAndScore();
 		}
 		

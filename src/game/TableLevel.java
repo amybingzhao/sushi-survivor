@@ -78,8 +78,6 @@ public class TableLevel extends Level {
 
 	@Override
 	protected void updateCanvas() {
-		//addBackground("tableBackground.png");
-		System.out.println("still updating canvas from table level");
 		this.getBackground().setTranslateX(this.getBackground().getTranslateX() - 0.5);
 		if (this.getBackground().getTranslateX() == -2048.0) {
 			this.setStopLevel(true);
@@ -87,7 +85,6 @@ public class TableLevel extends Level {
 			this.getRoot().getChildren().add(transLabel);
 			scheduleInputTimer(this.getInput(), this);
 		}
-		//System.out.println(this.getBackground().getTranslateX());
 		moveSpritesForward(knifeList);
 		moveSpritesForward(shrimpList);
 	}

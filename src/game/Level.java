@@ -80,7 +80,6 @@ public abstract class Level {
 						stop();
 						if (isGameOver() == true) {
 							gameOver();
-							System.out.println("here from " + this.toString());
 							if (this.toString().equals(CUSTOMER_LEVEL_NAME)) {
 								myGame.getLevelTimer().cancel();
 							}
@@ -141,7 +140,6 @@ public abstract class Level {
 			scheduleUpdateTimer();
 			scheduleSpriteTimer();
 			if (this.toString().equals(CUSTOMER_LEVEL_NAME)) {
-				System.out.println("scheudling customer timer");
 				myGame.scheduleCustomerLevelTimer(this);
 			}
 		}
@@ -176,7 +174,6 @@ public abstract class Level {
 					public void run() {
 						sushi.setSpeed(sushi.getSpeed() + 0.5);
 						spriteSpeed = spriteSpeed + 0.5;
-						System.out.println("update timer timed out");
 					}
 				});
 			}
@@ -204,10 +201,8 @@ public abstract class Level {
 					public void run() {
 						if (cheat.equals("W")) {
 							curLevel.setSpriteSpeed(origSpeed);
-							System.out.println("cheat timer timed out on W, cur speed: " + Double.toString(curLevel.getSpriteSpeed()) + "orig speed: " + Double.toString(origSpeed));
 						} else if (cheat.equals("E")) {
 							curLevel.getSushi().setSpeed(origSpeed);
-							System.out.println("cheat timer timed out on E");
 						}
 					}
 				});
@@ -218,7 +213,6 @@ public abstract class Level {
 	private void initScene(StackPane root) {
 		myRoot = root;
 		myScene = new Scene(myRoot);
-		System.out.println(getBackgroundImageName());
 		myBackground = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(getBackgroundImageName())));
 		myCanvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 		myRoot.getChildren().addAll(myBackground, myCanvas);

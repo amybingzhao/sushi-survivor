@@ -86,7 +86,6 @@ public class Game {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					public void run() {
-						System.out.println("customer level timed out");
 						level.setGameOver(true);
 						endGame(level);
 					}
@@ -96,7 +95,6 @@ public class Game {
 	};
 	
 	public void endGame(Level level) {
-		System.out.println(level.toString());
 		level.setStopLevel(true);
 		if (level.getSushi().getNumFish() > 0) {
 			level.setWin(true);
