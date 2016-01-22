@@ -57,6 +57,11 @@ public abstract class Level {
 	private Game myGame;
 	private ImageView myBackground;
 	
+	/*
+	 * Initializes the level and begins the animation timer.
+	 * @param: stage is the stage on which the level will be displayed.
+	 * @param: game is the game that created the level.   
+	 */
 	public void init(Stage stage, Game game) {
 		myStage = stage;
 		myStage.setWidth(CANVAS_WIDTH);
@@ -99,28 +104,40 @@ public abstract class Level {
 		stage.setScene(myScene);
 	}
 	
+	/*
+	 * Cancels recurring timers from this level.
+	 */
 	private void cancelTimers() {
 		myUpdateSpeedTimer.cancel();
 		myUpdateSpeedTimer.purge();
 		mySpriteSpawnTimer.cancel();
 		mySpriteSpawnTimer.purge();
 	}
+	
+	/*
+	 * Returns the canvas height.
+	 */
 	protected int getCanvasHeight() {
 		return CANVAS_HEIGHT;
 	}
 	
+	/*
+	 * Returns the canvas width.
+	 */
 	protected int getCanvasWidth() {
 		return CANVAS_WIDTH;
 	}
 	
+	/*
+	 * Returns the graphics context for the level's canvas.
+	 */
 	protected GraphicsContext getGraphicsContext() {
 		return myGc;
 	}
 	
-	private Scene getMyScene() {
-		return myScene;
-	}
-	
+	/*
+	 * Initializes the level state.
+	 */
 	private void initLevelState() {
 		myInput = new ArrayList<String>();
 		spriteSpeed = INIT_SPRITE_SPEED;
@@ -134,6 +151,9 @@ public abstract class Level {
 		setStopLevel(false);
 	}
 	
+	/*
+	 * Schedules recurring timers once player indicates they're ready for the level to begin.
+	 */
 	private void checkForReady() {
 		if (myInput.contains("ENTER")) {
 			start = true;
@@ -145,10 +165,16 @@ public abstract class Level {
 		}
 	}
 	
+	/*
+	 * Returns the level's root stack pane.
+	 */
 	public StackPane getRoot() {
 		return myRoot;
 	}
 	
+	/*
+	 * Creates message to be displayed while waiting for player to be ready.
+	 */
 	public Label createReadyMessage() {
 		Label readyLabel = new Label(getInstructions() + "\n\n" + "Press ENTER to start!");
 		readyLabel.setWrapText(true);
@@ -160,12 +186,21 @@ public abstract class Level {
 		return readyLabel;
 	}
 	
+	/* 
+	 * Returns the scene this level is built on.
+	 */
 	public Scene getScene() {
 		return myScene;
 	}
 	
+	/*
+	 * Returns the instructions for the particular level being played.
+	 */
 	protected abstract String getInstructions();
 	
+	/*
+	 * Schedules the timer for updating sprite speeds.
+	 */
 	private void scheduleUpdateTimer() {
 		myUpdateSpeedTimer = new Timer();
 		myUpdateSpeedTimer.schedule(new TimerTask() {
@@ -180,6 +215,9 @@ public abstract class Level {
 		}, UPDATE_DURATION, UPDATE_DURATION);	
 	}
 	
+	/*
+	 * Schedules the timer for spawning new sprites.
+	 */
 	private void scheduleSpriteTimer() {
 		mySpriteSpawnTimer = new Timer();
 		mySpriteSpawnTimer.schedule(new TimerTask() {
@@ -193,6 +231,9 @@ public abstract class Level {
 		}, SPRITE_SPAWN_INTERVAL, SPRITE_SPAWN_INTERVAL);	
 	}
 	
+	/*
+	 * Schedules the timer to cancel effects of a particular cheat once it expires.
+	 */
 	private void scheduleCheatTimer(String cheat, double origSpeed, Level curLevel) {
 		Timer cheatTimer = new Timer();
 		cheatTimer.schedule(new TimerTask() {
@@ -210,6 +251,10 @@ public abstract class Level {
 		}, CHEAT_DURATION);	
 	}
 	
+	/* 
+	 * Initializes the scene for this level.
+	 * @param root is the Stack Pane that the scene's contents will be added to.
+	 */
 	private void initScene(StackPane root) {
 		myRoot = root;
 		myScene = new Scene(myRoot);
@@ -220,6 +265,9 @@ public abstract class Level {
 		myGc = myCanvas.getGraphicsContext2D();
 	}
 	
+	/*
+	 * Initializes onKeyPressed and onKeyReleased methods. Keycodes are added to input when pressed, removed when released.
+	 */
 	public void setupKeyEventHandler() {
 		myScene.setOnKeyPressed(
 				new EventHandler<KeyEvent>() {
@@ -238,10 +286,21 @@ public abstract class Level {
 				});
 	}
 	
+	/*
+	 * Returns the filename for the background image of the level.
+	 */
 	protected abstract String getBackgroundImageName();
 	
+	/*
+	 * Populates the empty scene with initial sprites.
+	 */
 	protected abstract void populateSceneWithSprites();
 	
+	/*
+	 * Populates a given arraylist with a single type of sprites.
+	 * @param: filename is the file name of the image to be used for the sprites.
+	 * @param: array is the arraylist to be populated.
+	 */
 	public void populateSpriteArrayList(String filename, ArrayList<Sprite> array) {
 		for (int i = 0; i < NUM_SPRITES_PER_TYPE; i++) {
 			Sprite s = generateSprite(filename);
@@ -250,6 +309,10 @@ public abstract class Level {
 		}
 	}
 
+	/*
+	 * Creates a sprite with a given image and sets its position randomly.
+	 * @param: filename is the file name of the image to be used for the sprite.
+	 */
 	public Sprite generateSprite(String filename) {
 		Sprite sprite = new Sprite();
 		sprite.setImage(filename);
@@ -259,10 +322,26 @@ public abstract class Level {
 		return sprite;
 	}
 	
+	/*
+	 * Generates a random x-coordinate position for a given sprite.
+	 */
 	protected abstract double generateRandomX(Sprite sprite);
+	
+	/*
+	 * Generates a random y-coordinate position for a given sprite.
+	 */
 	protected abstract double generateRandomY(Sprite sprite);
 	
+	/*
+	 * Replace sprites so that the scene always has NUM_SPRITES_PER_TYPE of sprites for each type of sprite.
+	 */
 	protected abstract void replaceSprites();
+	
+	/*
+	 * Replace the sprites that've moved out of the bounds of the canvas.
+	 * @param: sprites is the arraylist of sprites to update.
+	 * @param: filename is the file name of the image to be used for the sprite.
+	 */
 	public void replaceOutOfBoundsSprites(ArrayList<Sprite> sprites, String filename) {
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
@@ -273,17 +352,33 @@ public abstract class Level {
 		}		
 	}
 	
+	/*
+	 * Adds one sprite to an arraylist of sprites if the arraylist has < NUM_SPRITES_PER_TYPE of that type of sprite.
+	 * @param: sprites is the arraylist to be updated.
+	 * @param: filename is the file name of the image to be used for the sprite.
+	 */
 	public void addSpritesToGetNumSpritesPerType(ArrayList<Sprite> sprites, String filename) {
 		int diff = NUM_SPRITES_PER_TYPE - sprites.size();
 		if (diff > 0) {
 			addMoreSprites(sprites, filename);
 		}
 	}
+	
+	/*
+	 * Determines if a sprite is out of the bounds of the canvas.
+	 */
 	protected abstract boolean outOfBounds(Sprite s);
 	
+	/*
+	 * Returns the background image for the level.
+	 */
 	protected ImageView getBackground() {
 		return myBackground;
 	}
+	
+	/*
+	 * Creates a new sprite to be added to the canvas.
+	 */
 	public void addMoreSprites(ArrayList<Sprite> sprites, String filename) {
 		Sprite s = generateSprite(filename);
 		switch (this.toString()) {
@@ -297,8 +392,14 @@ public abstract class Level {
 		s.render(myGc);
 	}
 	
+	/*
+	 * Checks all sprite arraylists for collisions with the sushi sprite.
+	 */
 	protected abstract void checkListCollisions();
 	
+	/*
+	 * Checks a given arraylist for collisions with the sushi sprite.
+	 */
 	public boolean checkSpriteCollisions(ArrayList<Sprite> sprites) {
 		for (int i = 0; i < sprites.size(); i++) {
 			Sprite s = sprites.get(i);
@@ -310,22 +411,41 @@ public abstract class Level {
 		return false;
 	}
 	
+	/*
+	 * Checks player key input and handles it.
+	 */
 	private void checkInput() {
 		sushi.handleInput(myInput, CANVAS_WIDTH, CANVAS_HEIGHT, this.toString());
 		checkInputForCheats(myInput);
 	}
 	
+	/*
+	 * Returns an arraylist of player key input.
+	 */
 	protected ArrayList<String> getInput() {
 		return myInput;
 	}
+	
+	/*
+	 * Updates the contents of the canvas.
+	 */
 	protected abstract void updateCanvas();
-		
+	
+	/*
+	 * Updates the sushi's number of fish and the player's score.
+	 */
 	protected abstract void updateSushiAndScore();
 	
+	/*
+	 * Game over.
+	 */
 	public void gameOver() {
 		createGameOverScene();
 	}
 	
+	/*
+	 * Creates the game over scene.
+	 */
 	private void createGameOverScene() {
 		StackPane root = new StackPane();
 		initScene(root);
@@ -337,6 +457,9 @@ public abstract class Level {
 		myStage.show();
 	}
 	
+	/*
+	 * Creates the restart button.
+	 */
 	private Button createRestartButton() {
 		Button restart = new Button();
 		restart.setText("Restart");
@@ -351,10 +474,16 @@ public abstract class Level {
 		return restart;
 	}
 	
+	/*
+	 * Returns the Game that created this level.
+	 */
 	protected Game getMyGame() {
 		return myGame;
 	}
 	
+	/*
+	 * Creates the game over message.
+	 */
 	private Label createGameOverLabel() {
 		Label gameOverLabel = new Label();
 		gameOverLabel.setMinWidth(CANVAS_WIDTH);
@@ -372,49 +501,79 @@ public abstract class Level {
 		return gameOverLabel;
 	}
 
+	/*
+	 * Returns whether or not the game is over.
+	 */
 	public boolean isGameOver() {
 		return gameOver;
 	}
 
+	/*
+	 * Sets whether or not the game is over.
+	 */
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
 	}
 	
+	/*
+	 * Returns whether or not the player has won.
+	 */
 	public boolean hasWon() {
 		return win;
 	}
 	
+	/*
+	 * Sets whether or not the player has won.
+	 */
 	public void setWin(boolean win) {
 		this.win = win;
 	}
 
+	/*
+	 * Returns whether or not to stop the level.
+	 */
 	public boolean isStopLevel() {
 		return stopLevel;
 	}
 
+	/*
+	 * Sets whether or not to stop the level.
+	 */
 	public void setStopLevel(boolean stopLevel) {
 		this.stopLevel = stopLevel;
 	}
 
+	/*
+	 * Returns the label that displays the player's score.
+	 */
 	public Label getScoreLabel() {
 		return scoreLabel;
 	}
 
-	public boolean getGameOver() {
-		return gameOver;
-	}
+	/*
+	 * Sets the label that displays the player's score.
+	 */
 	public void setScoreLabel(Label scoreLabel) {
 		this.scoreLabel = scoreLabel;
 	}
 	
+	/*
+	 * Sets the level's Sushi sprite.
+	 */
 	public void setSushi(Sushi s) {
 		this.sushi = s;
 	}
 	
+	/*
+	 * Gets the level's Sushi sprite.
+	 */
 	public Sushi getSushi() {
 		return sushi;
 	}
 	
+	/*
+	 * Checks input for player use of cheat codes.
+	 */
 	protected void checkInputForCheats(ArrayList<String> input) {
 				if (input.contains("Q")) {
 					clearObstacles();
@@ -442,12 +601,21 @@ public abstract class Level {
 				}
 	}
 	
+	/*
+	 * Clears the obstacles of the level.
+	 */
 	protected abstract void clearObstacles();
 	
+	/*
+	 * Returns the current speed of the level's non-Sushi sprites.
+	 */
 	public double getSpriteSpeed() {
 		return spriteSpeed;
 	}
 	
+	/*
+	 * Sets the speed of the level's non-Sushi sprites.
+	 */
 	public void setSpriteSpeed(double s) {
 		if (s > 0) {
 			this.spriteSpeed = s;

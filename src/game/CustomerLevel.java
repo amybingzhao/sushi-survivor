@@ -83,7 +83,7 @@ public class CustomerLevel extends Level {
 
 	@Override
 	protected void updateSushiAndScore() {
-		if (getGameOver() != true) {
+		if (!isGameOver()) {
 			this.getSushi().setNumFish(this.getSushi().getNumFish() - 2);
 			if (this.getSushi().getNumFish() <= 0) {
 				setGameOver(true);
