@@ -37,6 +37,8 @@ public abstract class Level {
 	private static final double INIT_SPRITE_SPEED = 2.0;
 	private static final int SPRITE_SPAWN_INTERVAL = ONE_SECOND;
 	private static final int CHEAT_DURATION = 2 * ONE_SECOND;
+	private static final String TABLE_LEVEL_NAME = "Table Level";
+	private static final String CUSTOMER_LEVEL_NAME = "Customer Level";
 	private Timer myUpdateSpeedTimer;
 	private Timer mySpriteSpawnTimer;
 	private GraphicsContext myGc;
@@ -345,6 +347,11 @@ public abstract class Level {
 		restart.setAlignment(Pos.CENTER);
 		return restart;
 	}
+	
+	protected Game getMyGame() {
+		return myGame;
+	}
+	
 	private Label createGameOverLabel() {
 		Label gameOverLabel = new Label();
 		gameOverLabel.setMinWidth(CANVAS_WIDTH);
@@ -421,6 +428,11 @@ public abstract class Level {
 					scheduleCheatTimer("E", curSushiSpeed, this);
 					this.getSushi().setSpeed(this.getSushi().getSpeed() + 3.0);
 					input.remove("E");
+				}
+				if (input.contains("SPACE") && this.toString().equals(TABLE_LEVEL_NAME)) {
+					input.remove("SPACE");
+					System.out.println("hi");
+					myGame.switchToCustomerLevel();
 				}
 	}
 	

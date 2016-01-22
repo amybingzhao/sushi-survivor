@@ -14,13 +14,14 @@ public class TableLevel extends Level {
 	private static final String KNIFE_IMAGE = "knife.png";
 	private static final String SHRIMP_IMAGE = "shrimp.png";
 	private ImageView myBackground;
+	private static final String LEVEL_NAME = "Table Level";
 	
 	public TableLevel (double numStartingFish) {
 		this.setSushi(new Sushi(0, this.getCanvasHeight()/2, 0));
 		this.getSushi().setNumFish(numStartingFish);
 	}
 	public String toString() {
-		return "Table Level";
+		return LEVEL_NAME;
 	}
 
 	@Override
@@ -72,6 +73,9 @@ public class TableLevel extends Level {
 	protected void updateCanvas() {
 		//addBackground("tableBackground.png");
 		this.getBackground().setTranslateX(this.getBackground().getTranslateX() - 0.5);
+		if (this.getBackground().getTranslateX() == -2048.0) {
+			getMyGame().switchToCustomerLevel();
+		}
 		System.out.println(this.getBackground().getTranslateX());
 		moveSpritesForward(knifeList);
 		moveSpritesForward(shrimpList);

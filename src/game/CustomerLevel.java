@@ -21,6 +21,7 @@ public class CustomerLevel extends Level {
 	private final double UPWARDS = -1;
 	private final double DOWNWARDS = 1;
 	private static final double BOTTOM_BORDER = 5;
+	private static final String LEVEL_NAME = "Customer Level";
 	
 	// TODO: create constructor with sushi or numFish or something
 	public CustomerLevel(double numStartingFish) {
@@ -31,7 +32,7 @@ public class CustomerLevel extends Level {
 	}
 	
 	public String toString() {
-		return "Customer Level";
+		return LEVEL_NAME;
 	}
 
 	@Override

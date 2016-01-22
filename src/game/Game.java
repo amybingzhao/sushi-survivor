@@ -58,7 +58,6 @@ public class Game {
 		}
 		myStage = stage;
 		myGame = game;
-		scheduleTableLevelTimer();
 		startLevel(new TableLevel((double) 0), myStage, this);
 		myStage.show();
 	}
@@ -68,27 +67,17 @@ public class Game {
 		level.init(stage, game);
 		myStage.setScene(level.getScene());
 	}
-
-	public void scheduleTableLevelTimer() {
-		myLevelTimer = new Timer();
-
-		myLevelTimer.schedule(new TimerTask() {
-			public void run() {
-				Platform.runLater(new Runnable() {
-					public void run() {
-						System.out.println("level's game over status: " + String.valueOf(myLevel.isGameOver()));
-						if (myLevel.isGameOver() == false) {
-							myLevel.setStopLevel(true);
-							double numStartingFish = myLevel.getSushi().getNumFish();
-							startLevel(new CustomerLevel(numStartingFish), myStage, myGame);
-							scheduleCustomerLevelTimer();
-							System.out.println("level timer stopped");
-						}
-					}
-				});
-			}
-		}, LEVEL_DURATION);
-	};
+	
+	public void switchToCustomerLevel() {
+		System.out.println("level's game over status: " + String.valueOf(myLevel.isGameOver()));
+		if (myLevel.isGameOver() == false) {
+			myLevel.setStopLevel(true);
+			double numStartingFish = myLevel.getSushi().getNumFish();
+			startLevel(new CustomerLevel(numStartingFish), myStage, myGame);
+			scheduleCustomerLevelTimer();
+			System.out.println("level timer stopped");
+		}
+	}
 
 	public void scheduleCustomerLevelTimer() {
 		myLevelTimer = new Timer();

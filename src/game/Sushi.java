@@ -11,6 +11,8 @@ public class Sushi extends Sprite {
 	private double speed;
 	private double numFish;
 	private static final String SUSHI_IMAGE = "sushi.png";
+	private static final String TABLE_LEVEL_NAME = "Table Level";
+	private static final String CUSTOMER_LEVEL_NAME = "Customer Level";
 
 	public Sushi(double x, double y, double num) {
 		setImage(new Image(getClass().getClassLoader().getResourceAsStream(SUSHI_IMAGE)));
@@ -29,14 +31,14 @@ public class Sushi extends Sprite {
 		if (input.contains("RIGHT") && (getPosX() + speed <= (canvasWidth - getWidth()))) {
 			setPosX(getPosX() + speed);
 		}
-		if (level.equals("Table Level")) {
+		if (level.equals(TABLE_LEVEL_NAME)) {
 			if (input.contains("UP") && (getPosY() - speed >= 0)) {
 				setPosY(getPosY() - speed);
 			}
 			if (input.contains("DOWN") && (getPosY() + speed <= (canvasHeight - getHeight()))) {
 				setPosY(getPosY() + speed);
 			}
-		} else if (level.equals("Customer Level")) {
+		} else if (level.equals(CUSTOMER_LEVEL_NAME)) {
 			if (input.contains("SPACE") && this.numFish > 0) {
 				this.throwFish();
 			}
