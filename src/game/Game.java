@@ -136,7 +136,7 @@ public class Game {
 						FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.2), splashLayout);
 		                fadeSplash.setFromValue(1.0);
 		                fadeSplash.setToValue(0.0);
-		                fadeSplash.setOnFinished(actionEvent -> hideSplashStageAndInitGame(stage));
+		                fadeSplash.setOnFinished(actionEvent -> hideStageAndInitGame(stage));
 		                fadeSplash.play();
 					}
 				});
@@ -145,7 +145,7 @@ public class Game {
 	/*
 	 * Hides the stage for the splash screen and initializes the game.
 	 */
-	private void hideSplashStageAndInitGame(Stage stage) {
+	private void hideStageAndInitGame(Stage stage) {
 		stage.hide();
 		if (gameInit == false) {
 			gameInit = true;
@@ -156,7 +156,7 @@ public class Game {
 	/*
 	 * Initializes the game.
 	 * @param: stage is the stage on which the game is to be played.
-	 * @param: game is the game that the level is a part of.????????????????????????????
+	 * @param: game is the current game
 	 */
 	public void init(Stage stage, Game game) {
 		if (myLevelTimer != null) {
