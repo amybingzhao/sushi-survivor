@@ -35,6 +35,7 @@ Cheat Keys:
 
 Known bugs:
 * If you press the same cheat key multiple times in quick succession, it'll get stuck on that cheat for W and E (e.g. if you press W twice in a row, the sprites might stay permanently slowed).
+* To transition from table level to customer level, must hold ENTER down. Since it's being polled every 1 second, if you just press it, sometimes it misses the key press.
 
 Extra features:
 * Splash screen with loading bar
