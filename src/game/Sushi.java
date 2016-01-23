@@ -2,8 +2,6 @@ package game;
 
 import java.util.ArrayList;
 
-import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 public class Sushi extends Sprite {
@@ -12,8 +10,7 @@ public class Sushi extends Sprite {
 	private double numFish;
 	private static final String SUSHI_IMAGE = "sushi.png";
 	private static final String TABLE_LEVEL_NAME = "Table Level";
-	private static final String CUSTOMER_LEVEL_NAME = "Customer Level";
-
+	
 	public Sushi(double x, double y, double num) {
 		setImage(new Image(getClass().getClassLoader().getResourceAsStream(SUSHI_IMAGE)));
 		speed = INIT_SPEED;
@@ -41,18 +38,7 @@ public class Sushi extends Sprite {
 			if (input.contains("DOWN") && (getPosY() + speed <= (canvasHeight - getHeight()))) {
 				setPosY(getPosY() + speed);
 			}
-		} else if (level.equals(CUSTOMER_LEVEL_NAME)) {
-			if (input.contains("SPACE") && this.numFish > 0) {
-				this.throwFish();
-			}
-		}
-	}
-	
-	private void throwFish() {
-		if (numFish > 0) {
-			numFish--;
-			//throw it
-		}
+		} 
 	}
 	
 	/*

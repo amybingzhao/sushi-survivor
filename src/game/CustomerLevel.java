@@ -1,18 +1,13 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.stage.Stage;
+import javafx.application.Platform;
 
 public class CustomerLevel extends Level {
-	private ArrayList<Sprite> soySauceList = new ArrayList();
+	private ArrayList<Sprite> soySauceList = new ArrayList<Sprite>();
 	private Sprite chopsticks = new Sprite();
 	private double chopstickDirection;
 	private static final String CUSTOMER_BACKGROUND_IMAGE = "customerBackground.jpg";
@@ -22,52 +17,26 @@ public class CustomerLevel extends Level {
 	private final double DOWNWARDS = 1;
 	private static final double BOTTOM_BORDER = 5;
 	private static final String LEVEL_NAME = "Customer Level";
+	private boolean recentlyHit = false;
+	private Timer myRecencyTimer;
+	private static final long ONE_SECOND = 1000;
 	
-	// TODO: create constructor with sushi or numFish or something
 	public CustomerLevel(double numStartingFish) {
-		super.setSushi(new Sushi(this.getCanvasWidth()/2, this.getCanvasHeight(), 0));//NEED TO RETAIN NUM FISH SOMEHOW
+		super.setSushi(new Sushi(this.getCanvasWidth()/2, this.getCanvasHeight(), 0));
 		Sushi s = this.getSushi();
 		s.setPosY(this.getCanvasHeight() - s.getHeight() - BOTTOM_BORDER);
 		s.setNumFish(numStartingFish);
 	}
 
 	/*
-	 * Returns the name of this level.
-	 */
-	public String toString() {
-		return LEVEL_NAME;
-	}
-
-	/*
-	 * Populates the empty scene with initial soysauce and chopstick sprites.
-	 */
-	@Override
-	protected void populateSceneWithSprites() {
-		this.getSushi().render(this.getGraphicsContext());
-		initChopsticks();
-		populateSpriteArrayList(SOYSAUCE_IMAGE, soySauceList);
-	}
-	
-	/*
 	 * Initializes chopstick sprite.
 	 */
 	private void initChopsticks() {
-		chopsticks = new Chopsticks(this.getCanvasWidth()/2, 0);
+		chopsticks = new Sprite();
+		chopsticks.setImage(CHOPSTICKS_IMAGE);
+		chopsticks.setPosX(this.getCanvasWidth()/2);
 		chopsticks.setPosY(0 - chopsticks.getHeight());
 		chopsticks.render(this.getGraphicsContext());
-	}
-	
-	/*
-	 * Moves an arraylist of sprites down across the canvas.
-	 */
-	public void moveSpritesForward(ArrayList<Sprite> sprites) {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < sprites.size(); i++) {
-			Sprite s = sprites.get(i);
-			double curY = s.getPosY();
-			s.setPosY(curY + this.getSpriteSpeed());
-			s.render(this.getGraphicsContext());
-		}
 	}
 	
 	/* 
@@ -83,6 +52,39 @@ public class CustomerLevel extends Level {
 		}
 		chopsticks.setPosY(chopsticks.getPosY() + chopstickDirection);
 		chopsticks.render(this.getGraphicsContext());
+	}
+	
+	/*
+	 * Populates the empty scene with initial soysauce and chopstick sprites.
+	 */
+	@Override
+	protected void populateSceneWithSprites() {
+		this.getSushi().render(this.getGraphicsContext());
+		initChopsticks();
+		populateSpriteArrayList(SOYSAUCE_IMAGE, soySauceList);
+	}
+	
+	/*
+	 * Moves an arraylist of sprites down across the canvas.
+	 */
+	public void moveSpritesForward(ArrayList<Sprite> sprites) {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < sprites.size(); i++) {
+			Sprite s = sprites.get(i);
+			double curY = s.getPosY();
+			s.setPosY(curY + this.getSpriteSpeed());
+			s.render(this.getGraphicsContext());
+		}
+	}
+	
+	/*
+	 * Updates the contents of the canvas.
+	 */
+	@Override
+	protected void updateCanvas() {
+		//addBackground(CUSTOMER_BACKGROUND_IMAGE);
+		moveSpritesForward(soySauceList);
+		moveChopsticks();
 	}
 
 	/*
@@ -104,31 +106,57 @@ public class CustomerLevel extends Level {
 	 */
 	@Override
 	protected void updateSushiAndScore() {
-		if (!isGameOver()) {
+		if (!isGameOver() && !recentlyHit) {
 			this.getSushi().setNumFish(this.getSushi().getNumFish() - 2);
 			if (this.getSushi().getNumFish() <= 0) {
 				setGameOver(true);
 				getScoreLabel().setText("Score: 0");
 				this.getSushi().setNumFish(0);
+				if (myRecencyTimer != null) {myRecencyTimer.cancel();};
 				getMyGame().getLevelTimer().cancel();
 				getMyGame().endGame(this);
 			} else {
 				getScoreLabel().setText("Score: " + Integer.toString((int) this.getSushi().getNumFish()));
 			}
+			recentlyHit = true;
+			scheduleRecentlyHitTimer();
 		}
 	}
 
 	/*
-	 * Updates the contents of the canvas.
+	 * Schedules a timer so that for 2 seconds the sushi won't count as being "hit".
+	 */
+	private void scheduleRecentlyHitTimer() {
+		myRecencyTimer = new Timer();
+		myRecencyTimer.schedule(new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						recentlyHit = false;
+					}
+				});
+			}
+		}, ONE_SECOND * 2);	
+	}
+	
+	/*
+	 * Clears the obstacles of this level (soysauce).
 	 */
 	@Override
-	protected void updateCanvas() {
-		//addBackground(CUSTOMER_BACKGROUND_IMAGE);
-		moveSpritesForward(soySauceList);
-		Sushi s = this.getSushi();
-		moveChopsticks();
+	protected void clearObstacles() {
+		soySauceList.clear();
 	}
 
+	/*
+	 * Replaces sprites so that NUM_SPRITES_PER_TYPE of sprites are always present for each type.
+	 */
+	@Override
+	protected void replaceSprites() {
+		// TODO Auto-generated method stub
+		replaceOutOfBoundsSprites(soySauceList, SOYSAUCE_IMAGE);
+		addSpritesToGetNumSpritesPerType(soySauceList, SOYSAUCE_IMAGE);
+	}
+	
 	/*
 	 * Generates a random x-coordinate position for a given sprite.
 	 */
@@ -163,28 +191,16 @@ public class CustomerLevel extends Level {
 	}
 
 	/*
-	 * Clears the obstacles of this level (soysauce).
-	 */
-	@Override
-	protected void clearObstacles() {
-		soySauceList.clear();
-	}
-
-	/*
-	 * Replaces sprites so that NUM_SPRITES_PER_TYPE of sprites are always present for each type.
-	 */
-	@Override
-	protected void replaceSprites() {
-		// TODO Auto-generated method stub
-		replaceOutOfBoundsSprites(soySauceList, SOYSAUCE_IMAGE);
-		addSpritesToGetNumSpritesPerType(soySauceList, SOYSAUCE_IMAGE);
-	}
-	
-	/*
 	 * Returns the file name of the background image for the Table Level.
 	 */
 	public String getBackgroundImageName() {
 		return CUSTOMER_BACKGROUND_IMAGE;
 	}
 	
+	/*
+	 * Returns the name of this level.
+	 */
+	public String toString() {
+		return LEVEL_NAME;
+	}
 }

@@ -1,20 +1,15 @@
 package game;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 
 public class TableLevel extends Level {
 	private ArrayList<Sprite> knifeList = new ArrayList<Sprite>();
@@ -22,7 +17,6 @@ public class TableLevel extends Level {
 	private static final String TABLE_BACKGROUND_IMAGE = "tableBackground.png";
 	private static final String KNIFE_IMAGE = "knife.png";
 	private static final String SHRIMP_IMAGE = "shrimp.png";
-	private ImageView myBackground;
 	private static final String LEVEL_NAME = "Table Level";
 	private static final long ONE_SECOND = 1000;
 	private static final double END_OF_BACKGROUND = -2048.0;
@@ -32,13 +26,6 @@ public class TableLevel extends Level {
 		this.getSushi().setNumFish(numStartingFish);
 	}
 	
-	/*
-	 * Returns the name of this level.
-	 */
-	public String toString() {
-		return LEVEL_NAME;
-	}
-
 	/*
 	 * Populates the empty scene with initial knife and shrimp sprites.
 	 */
@@ -62,6 +49,22 @@ public class TableLevel extends Level {
 	}
 
 	/*
+	 * Updates the contents of the canvas. If the end of the table has been reached, transition to next level.
+	 */
+	@Override
+	protected void updateCanvas() {
+		this.getBackground().setTranslateX(this.getBackground().getTranslateX() - 0.5);
+		if (this.getBackground().getTranslateX() == END_OF_BACKGROUND) {
+			this.setStopLevel(true);
+			Label transLabel = createLevelTransitionMessage();
+			this.getRoot().getChildren().add(transLabel);
+			scheduleReadyTimer(this.getInput(), this);
+		}
+		moveSpritesForward(knifeList);
+		moveSpritesForward(shrimpList);
+	}
+	
+	/*
 	 * Checks and handles all sprite arraylists for the level for collisions with the Sushi sprite.
 	 */
 	@Override
@@ -79,69 +82,12 @@ public class TableLevel extends Level {
 	}
 	
 	/*
-	 * Sets whether or not the game is over.
-	 */
-	public void setGameOver(boolean gameOver) {
-		if (gameOver) {
-			super.setGameOver(true);
-		}
-	}
-	
-	/*
 	 * Updates the sushi's number of fish and the player's score.
 	 */
 	@Override
 	protected void updateSushiAndScore() {
 		this.getSushi().setNumFish(this.getSushi().getNumFish() + 1);
 		getScoreLabel().setText("Score: " + Integer.toString((int) this.getSushi().getNumFish()));
-	}
-	
-	/*
-	 * Updates the contents of the canvas. If the end of the table has been reached, transition to next level.
-	 */
-	@Override
-	protected void updateCanvas() {
-		this.getBackground().setTranslateX(this.getBackground().getTranslateX() - 0.5);
-		if (this.getBackground().getTranslateX() == END_OF_BACKGROUND) {
-			this.setStopLevel(true);
-			Label transLabel = createLevelTransitionMessage();
-			this.getRoot().getChildren().add(transLabel);
-			scheduleReadyTimer(this.getInput(), this);
-		}
-		moveSpritesForward(knifeList);
-		moveSpritesForward(shrimpList);
-	}
-	
-	/*
-	 * Generates a random x-coordinate position for a given sprite in the right 2/3s of the canvas.
-	 */
-	@Override
-	protected double generateRandomX(Sprite sprite) {
-		return (this.getCanvasWidth()/3) + (this.getCanvasWidth() - sprite.getWidth()) * Math.random();
-	}
-	
-	/*
-	 * Generates a random y-coordinate position for a given sprite anywhere on the canvas.
-	 */
-	@Override
-	protected double generateRandomY(Sprite sprite) {
-		return (this.getCanvasHeight() - sprite.getHeight()) * Math.random();
-	}
-
-	/*
-	 * Returns true if sprite has moved out of bounds of the canvas.
-	 */
-	@Override
-	protected boolean outOfBounds(Sprite s) {
-		return (s.getPosX() + s.getWidth()) < 0;
-	}
-	
-	/* 
-	 * Returns the instructions for the Table Level.
-	 */
-	@Override
-	protected String getInstructions() {
-		return "Use the arrow keys to move.\nCollect shrimp and dodge the knives!\nIf you get hit by a knife then it's game over.";
 	}
 	
 	/*
@@ -163,12 +109,30 @@ public class TableLevel extends Level {
 		addSpritesToGetNumSpritesPerType(knifeList, KNIFE_IMAGE);
 		addSpritesToGetNumSpritesPerType(shrimpList, SHRIMP_IMAGE);
 	}
-
+	
 	/*
-	 * Returns the file name of the background image for the Table Level.
+	 * Generates a random x-coordinate position for a given sprite in the right 2/3s of the canvas.
 	 */
-	public String getBackgroundImageName() {
-		return TABLE_BACKGROUND_IMAGE;
+	@Override
+	protected double generateRandomX(Sprite sprite) {
+		return (this.getCanvasWidth()/3) + (this.getCanvasWidth() - sprite.getWidth()) * Math.random();
+	}
+	
+	/*
+	 * Generates a random y-coordinate position for a given sprite anywhere on the canvas.
+	 */
+	@Override
+	protected double generateRandomY(Sprite sprite) {
+		return (this.getCanvasHeight() - sprite.getHeight()) * Math.random();
+	}
+	
+	/*
+	 * Sets whether or not the game is over.
+	 */
+	public void setGameOver(boolean gameOver) {
+		if (gameOver) {
+			super.setGameOver(true);
+		}
 	}
 	
 	/*
@@ -211,7 +175,35 @@ public class TableLevel extends Level {
 					});
 				}
 			}, ONE_SECOND, ONE_SECOND);	
-		
 	}
 	
+	/*
+	 * Returns true if sprite has moved out of bounds of the canvas.
+	 */
+	@Override
+	protected boolean outOfBounds(Sprite s) {
+		return (s.getPosX() + s.getWidth()) < 0;
+	}
+	
+	/* 
+	 * Returns the instructions for the Table Level.
+	 */
+	@Override
+	protected String getInstructions() {
+		return "Use the arrow keys to move.\nCollect shrimp and dodge the knives!\nIf you get hit by a knife then it's game over.";
+	}
+
+	/*
+	 * Returns the file name of the background image for the Table Level.
+	 */
+	public String getBackgroundImageName() {
+		return TABLE_BACKGROUND_IMAGE;
+	}
+	
+	/*
+	 * Returns the name of this level.
+	 */
+	public String toString() {
+		return LEVEL_NAME;
+	}
 }

@@ -1,7 +1,5 @@
 package game;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,12 +8,10 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -75,7 +71,6 @@ public abstract class Level {
 		Label readyLabel = createReadyMessage();
 		myRoot.getChildren().add(readyLabel);
 		
-		
 		new AnimationTimer() {
 			public void handle(long currentNanoTime) {
 				if (start == true) {
@@ -105,37 +100,6 @@ public abstract class Level {
 	}
 	
 	/*
-	 * Cancels recurring timers from this level.
-	 */
-	private void cancelTimers() {
-		myUpdateSpeedTimer.cancel();
-		myUpdateSpeedTimer.purge();
-		mySpriteSpawnTimer.cancel();
-		mySpriteSpawnTimer.purge();
-	}
-	
-	/*
-	 * Returns the canvas height.
-	 */
-	protected int getCanvasHeight() {
-		return CANVAS_HEIGHT;
-	}
-	
-	/*
-	 * Returns the canvas width.
-	 */
-	protected int getCanvasWidth() {
-		return CANVAS_WIDTH;
-	}
-	
-	/*
-	 * Returns the graphics context for the level's canvas.
-	 */
-	protected GraphicsContext getGraphicsContext() {
-		return myGc;
-	}
-	
-	/*
 	 * Initializes the level state.
 	 */
 	private void initLevelState() {
@@ -149,6 +113,41 @@ public abstract class Level {
 		setGameOver(false);
 		win = false;
 		setStopLevel(false);
+	}
+	
+	/* 
+	 * Initializes the scene for this level.
+	 * @param root is the Stack Pane that the scene's contents will be added to.
+	 */
+	private void initScene(StackPane root) {
+		myRoot = root;
+		myScene = new Scene(myRoot);
+		myBackground = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(getBackgroundImageName())));
+		myCanvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+		myRoot.getChildren().addAll(myBackground, myCanvas);
+		myRoot.setAlignment(Pos.TOP_LEFT);
+		myGc = myCanvas.getGraphicsContext2D();
+	}
+	
+	/*
+	 * Initializes onKeyPressed and onKeyReleased methods. Keycodes are added to input when pressed, removed when released.
+	 */
+	public void setupKeyEventHandler() {
+		myScene.setOnKeyPressed(
+				new EventHandler<KeyEvent>() {
+					public void handle(KeyEvent e) {
+						String code = e.getCode().toString();
+						if (!myInput.contains(code)) { myInput.add(code); };
+					}
+				});
+		
+		myScene.setOnKeyReleased(
+				new EventHandler<KeyEvent>() {
+					public void handle(KeyEvent e) {
+						String code = e.getCode().toString();
+						myInput.remove(code);
+					}
+				});
 	}
 	
 	/*
@@ -166,13 +165,6 @@ public abstract class Level {
 	}
 	
 	/*
-	 * Returns the level's root stack pane.
-	 */
-	public StackPane getRoot() {
-		return myRoot;
-	}
-	
-	/*
 	 * Creates message to be displayed while waiting for player to be ready.
 	 */
 	public Label createReadyMessage() {
@@ -185,18 +177,6 @@ public abstract class Level {
 		readyLabel.setTextFill(Color.GRAY);
 		return readyLabel;
 	}
-	
-	/* 
-	 * Returns the scene this level is built on.
-	 */
-	public Scene getScene() {
-		return myScene;
-	}
-	
-	/*
-	 * Returns the instructions for the particular level being played.
-	 */
-	protected abstract String getInstructions();
 	
 	/*
 	 * Schedules the timer for updating sprite speeds.
@@ -251,45 +231,15 @@ public abstract class Level {
 		}, CHEAT_DURATION);	
 	}
 	
-	/* 
-	 * Initializes the scene for this level.
-	 * @param root is the Stack Pane that the scene's contents will be added to.
-	 */
-	private void initScene(StackPane root) {
-		myRoot = root;
-		myScene = new Scene(myRoot);
-		myBackground = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(getBackgroundImageName())));
-		myCanvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-		myRoot.getChildren().addAll(myBackground, myCanvas);
-		myRoot.setAlignment(Pos.TOP_LEFT);
-		myGc = myCanvas.getGraphicsContext2D();
-	}
-	
 	/*
-	 * Initializes onKeyPressed and onKeyReleased methods. Keycodes are added to input when pressed, removed when released.
+	 * Cancels recurring timers from this level.
 	 */
-	public void setupKeyEventHandler() {
-		myScene.setOnKeyPressed(
-				new EventHandler<KeyEvent>() {
-					public void handle(KeyEvent e) {
-						String code = e.getCode().toString();
-						if (!myInput.contains(code)) { myInput.add(code); };
-					}
-				});
-		
-		myScene.setOnKeyReleased(
-				new EventHandler<KeyEvent>() {
-					public void handle(KeyEvent e) {
-						String code = e.getCode().toString();
-						myInput.remove(code);
-					}
-				});
+	private void cancelTimers() {
+		myUpdateSpeedTimer.cancel();
+		myUpdateSpeedTimer.purge();
+		mySpriteSpawnTimer.cancel();
+		mySpriteSpawnTimer.purge();
 	}
-	
-	/*
-	 * Returns the filename for the background image of the level.
-	 */
-	protected abstract String getBackgroundImageName();
 	
 	/*
 	 * Populates the empty scene with initial sprites.
@@ -365,18 +315,6 @@ public abstract class Level {
 	}
 	
 	/*
-	 * Determines if a sprite is out of the bounds of the canvas.
-	 */
-	protected abstract boolean outOfBounds(Sprite s);
-	
-	/*
-	 * Returns the background image for the level.
-	 */
-	protected ImageView getBackground() {
-		return myBackground;
-	}
-	
-	/*
 	 * Creates a new sprite to be added to the canvas.
 	 */
 	public void addMoreSprites(ArrayList<Sprite> sprites, String filename) {
@@ -391,6 +329,11 @@ public abstract class Level {
 		sprites.add(s);
 		s.render(myGc);
 	}
+	
+	/*
+	 * Determines if a sprite is out of the bounds of the canvas.
+	 */
+	protected abstract boolean outOfBounds(Sprite s);
 	
 	/*
 	 * Checks all sprite arraylists for collisions with the sushi sprite.
@@ -412,11 +355,53 @@ public abstract class Level {
 	}
 	
 	/*
+	 * Clears the obstacles of the level.
+	 */
+	protected abstract void clearObstacles();
+	
+	/*
+	 * Returns the background image for the level.
+	 */
+	protected ImageView getBackground() {
+		return myBackground;
+	}
+	
+	/*
 	 * Checks player key input and handles it.
 	 */
 	private void checkInput() {
 		sushi.handleInput(myInput, CANVAS_WIDTH, CANVAS_HEIGHT, this.toString());
 		checkInputForCheats(myInput);
+	}
+	
+	/*
+	 * Checks input for player use of cheat codes.
+	 */
+	protected void checkInputForCheats(ArrayList<String> input) {
+				if (input.contains("Q")) {
+					clearObstacles();
+					cancelTimers();
+					scheduleUpdateTimer();
+					scheduleSpriteTimer();
+					input.remove("Q");
+				}
+				if (input.contains("W")) {
+					double curSpriteSpeed = this.getSpriteSpeed();
+					scheduleCheatTimer("W", curSpriteSpeed, this);
+					this.setSpriteSpeed(curSpriteSpeed- 2.0);
+					input.remove("W");
+				}
+				if (input.contains("E")) {
+					double curSushiSpeed = this.getSushi().getSpeed();
+					scheduleCheatTimer("E", curSushiSpeed, this);
+					this.getSushi().setSpeed(this.getSushi().getSpeed() + 3.0);
+					input.remove("E");
+				}
+				if (input.contains("SPACE") && this.toString().equals(TABLE_LEVEL_NAME)) {
+					input.remove("SPACE");
+					setStopLevel(true);
+					myGame.switchToCustomerLevel();
+				}
 	}
 	
 	/*
@@ -472,13 +457,6 @@ public abstract class Level {
 		});
 		restart.setAlignment(Pos.CENTER);
 		return restart;
-	}
-	
-	/*
-	 * Returns the Game that created this level.
-	 */
-	protected Game getMyGame() {
-		return myGame;
 	}
 	
 	/*
@@ -572,41 +550,6 @@ public abstract class Level {
 	}
 	
 	/*
-	 * Checks input for player use of cheat codes.
-	 */
-	protected void checkInputForCheats(ArrayList<String> input) {
-				if (input.contains("Q")) {
-					clearObstacles();
-					cancelTimers();
-					scheduleUpdateTimer();
-					scheduleSpriteTimer();
-					input.remove("Q");
-				}
-				if (input.contains("W")) {
-					double curSpriteSpeed = this.getSpriteSpeed();
-					scheduleCheatTimer("W", curSpriteSpeed, this);
-					this.setSpriteSpeed(curSpriteSpeed- 2.0);
-					input.remove("W");
-				}
-				if (input.contains("E")) {
-					double curSushiSpeed = this.getSushi().getSpeed();
-					scheduleCheatTimer("E", curSushiSpeed, this);
-					this.getSushi().setSpeed(this.getSushi().getSpeed() + 3.0);
-					input.remove("E");
-				}
-				if (input.contains("SPACE") && this.toString().equals(TABLE_LEVEL_NAME)) {
-					input.remove("SPACE");
-					setStopLevel(true);
-					myGame.switchToCustomerLevel();
-				}
-	}
-	
-	/*
-	 * Clears the obstacles of the level.
-	 */
-	protected abstract void clearObstacles();
-	
-	/*
 	 * Returns the current speed of the level's non-Sushi sprites.
 	 */
 	public double getSpriteSpeed() {
@@ -623,14 +566,56 @@ public abstract class Level {
 			this.spriteSpeed = 0.2;
 		}
 	}
-
-	public void moveSpritesForward(ArrayList<Sprite> sprites) {
-		for (int i = 0; i < sprites.size(); i++) {
-			Sprite s = sprites.get(i);
-			double curX = s.getPosX();
-			s.setPosX(curX - this.getSpriteSpeed());
-			s.render(this.getGraphicsContext());
-		}
+	
+	/*
+	 * Returns the canvas height.
+	 */
+	protected int getCanvasHeight() {
+		return CANVAS_HEIGHT;
 	}
-
+	
+	/*
+	 * Returns the canvas width.
+	 */
+	protected int getCanvasWidth() {
+		return CANVAS_WIDTH;
+	}
+	
+	/*
+	 * Returns the graphics context for the level's canvas.
+	 */
+	protected GraphicsContext getGraphicsContext() {
+		return myGc;
+	}
+	
+	/*
+	 * Returns the Game that created this level.
+	 */
+	protected Game getMyGame() {
+		return myGame;
+	}
+	
+	/*
+	 * Returns the level's root stack pane.
+	 */
+	public StackPane getRoot() {
+		return myRoot;
+	}
+	
+	/* 
+	 * Returns the scene this level is built on.
+	 */
+	public Scene getScene() {
+		return myScene;
+	}
+	
+	/*
+	 * Returns the instructions for the particular level being played.
+	 */
+	protected abstract String getInstructions();	
+	
+	/*
+	 * Returns the filename for the background image of the level.
+	 */
+	protected abstract String getBackgroundImageName();
 }
