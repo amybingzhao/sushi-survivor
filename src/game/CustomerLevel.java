@@ -18,7 +18,7 @@ public class CustomerLevel extends Level {
 	private static final double BOTTOM_BORDER = 5;
 	private static final String LEVEL_NAME = "Customer Level";
 	private boolean recentlyHit = false;
-	private Timer myRecencyTimer;
+	private Timer myRecencyTimer = new Timer();
 	private static final long ONE_SECOND = 1000;
 	
 	public CustomerLevel(double numStartingFish) {
@@ -127,7 +127,6 @@ public class CustomerLevel extends Level {
 	 * Schedules a timer so that for 2 seconds the sushi won't count as being "hit".
 	 */
 	private void scheduleRecentlyHitTimer() {
-		myRecencyTimer = new Timer();
 		myRecencyTimer.schedule(new TimerTask() {
 			public void run() {
 				Platform.runLater(new Runnable() {

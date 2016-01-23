@@ -20,6 +20,7 @@ public class TableLevel extends Level {
 	private static final String LEVEL_NAME = "Table Level";
 	private static final long ONE_SECOND = 1000;
 	private static final double END_OF_BACKGROUND = -2048.0;
+	private Timer myReadyTimer = new Timer();
 	
 	public TableLevel (double numStartingFish) {
 		this.setSushi(new Sushi(0, this.getCanvasHeight()/2, 0));
@@ -139,7 +140,7 @@ public class TableLevel extends Level {
 	 * Creates the message that's shown at the end of the Table Level.
 	 */
 	public Label createLevelTransitionMessage() {
-		Label transLabel = new Label("You made it across the table!\nNow you just have to make it past the hungry customer.\n\nPress ENTER to continue. Good luck!");
+		Label transLabel = new Label("You made it across the table!\nNow you just have to make it past the hungry customer.\n\n Hold ENTER to continue. Good luck!");
 		transLabel.setWrapText(true);
 		transLabel.setMinWidth(getCanvasWidth());
 		transLabel.setMinHeight(getCanvasHeight());
@@ -160,8 +161,7 @@ public class TableLevel extends Level {
 	 * Schedules a timer to check for player input to indicate they're ready for the next level.
 	 */
 	private void scheduleReadyTimer(ArrayList<String> input, Level curLevel) {
-			Timer readyTimer = new Timer();
-			readyTimer.schedule(new TimerTask() {
+			myReadyTimer.schedule(new TimerTask() {
 				public void run() {
 					Platform.runLater(new Runnable() {
 						public void run() {
@@ -174,7 +174,7 @@ public class TableLevel extends Level {
 						}
 					});
 				}
-			}, ONE_SECOND, ONE_SECOND);	
+			}, ONE_SECOND);	
 	}
 	
 	/*
