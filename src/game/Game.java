@@ -49,7 +49,7 @@ public class Game {
 	/*
 	 * Displays the splash screen for the game.
 	 */
-	public void showSplash(Stage stage) {
+	public void startSplashScreen(Stage stage) {
 		final Task<ObservableList<String>> loadTask = new Task<ObservableList<String>>() {
 
 			@Override
@@ -68,7 +68,7 @@ public class Game {
 			}
 		};
 		Scene scene = createSplashScene(stage);
-		generateSplash(stage, loadTask, () -> waitForPlayerReady(scene, stage));
+		showSplashProgress(stage, loadTask, () -> waitForPlayerReady(scene, stage));
 		
 		new Thread(loadTask).start();
 	}
@@ -97,7 +97,7 @@ public class Game {
 	/*
 	 * Generates the splash screen.
 	 */
-	public void generateSplash(Stage stage, Task<?> task, InitCompletionHandler initCompletionHandler) {
+	public void showSplashProgress(Stage stage, Task<?> task, InitCompletionHandler initCompletionHandler) {
 		progressText.textProperty().bind(task.messageProperty());
 		loadProgress.progressProperty().bind(task.progressProperty());
 		task.stateProperty().addListener((observableValue, oldState, newState) -> {
@@ -136,7 +136,7 @@ public class Game {
 						FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.2), splashLayout);
 		                fadeSplash.setFromValue(1.0);
 		                fadeSplash.setToValue(0.0);
-		                fadeSplash.setOnFinished(actionEvent -> hideStageAndInitGame(stage));
+		                fadeSplash.setOnFinished(actionEvent -> hideSplashStageAndInitGame(stage));
 		                fadeSplash.play();
 					}
 				});
@@ -145,7 +145,7 @@ public class Game {
 	/*
 	 * Hides the stage for the splash screen and initializes the game.
 	 */
-	private void hideStageAndInitGame(Stage stage) {
+	private void hideSplashStageAndInitGame(Stage stage) {
 		stage.hide();
 		if (gameInit == false) {
 			gameInit = true;

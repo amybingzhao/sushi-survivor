@@ -91,7 +91,7 @@ public abstract class Level {
 					updateCanvas();
 					sushi.render(myGc);
 				} else {
-					checkForReady();
+					checkForPlayerReady();
 				}
 			}
 		}.start();
@@ -153,7 +153,7 @@ public abstract class Level {
 	/*
 	 * Schedules recurring timers once player indicates they're ready for the level to begin.
 	 */
-	private void checkForReady() {
+	private void checkForPlayerReady() {
 		if (myInput.contains("ENTER")) {
 			start = true;
 			scheduleUpdateTimer();
