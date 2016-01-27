@@ -1,3 +1,11 @@
+// This entire file is part of my masterpiece.
+// Amy Zhao (abz3)
+
+// For my code masterpiece, I extracted the methods related to the creation and functioning of the splash screen into a separate SplashScreen class
+// (see SplashScreen.java for further explanation of the design).
+
+// Additionally, I modified the init() method in Game such that it no longer requires a Game object as a parameter, which was confusing to read.
+
 package game;
 
 import java.util.Timer;
@@ -29,15 +37,6 @@ public class Game {
 	private Timer myLevelTimer;
 	private Level myLevel;
 	private Stage myStage;
-	private Label progressText;
-	private ProgressBar loadProgress;
-	private static final int SPLASH_WIDTH = 500;
-	private static final int SPLASH_HEIGHT = 250;
-	private Group splashLayout;
-	private static final String SPLASH_IMAGE = "splashBackground.jpg";
-	private static final int BOTTOM_BORDER = 35;
-	private Game myGame;
-	private boolean gameInit = false;
 	
 	/*
 	 * Returns the title of the game.
@@ -47,123 +46,16 @@ public class Game {
 	}
 
 	/*
-	 * Displays the splash screen for the game.
-	 */
-	public void startSplashScreen(Stage stage) {
-		final Task<ObservableList<String>> loadTask = new Task<ObservableList<String>>() {
-
-			@Override
-			protected ObservableList<String> call() throws Exception {
-				ObservableList<String> tasksToLoad = FXCollections.observableArrayList(
-						"Generating backgrounds", "Loading sprites", "Creating sushi", "Loading levels"
-						);
-				
-				for (int i = 0; i < tasksToLoad.size(); i++) {
-					Thread.sleep(400);
-					String nextTask = tasksToLoad.get(i);
-					updateMessage(nextTask + "...");
-				}
-				
-				return tasksToLoad;
-			}
-		};
-		Scene scene = createSplashScene(stage);
-		showSplashProgress(stage, loadTask, () -> waitForPlayerReady(scene, stage));
-		
-		new Thread(loadTask).start();
-	}
-	
-	/*
-	 * Initializes the scene for the splash screen.
-	 */
-	public Scene createSplashScene(Stage stage) {
-		ImageView splash = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(SPLASH_IMAGE)));
-		splashLayout = new Group();
-		splashLayout.setEffect(new DropShadow());
-		loadProgress = new ProgressBar();
-		loadProgress.setPrefWidth(SPLASH_WIDTH);
-		progressText = new Label("Loading game...");
-		progressText.setMinWidth(SPLASH_WIDTH);
-		progressText.setAlignment(Pos.CENTER);
-		splashLayout.getChildren().addAll(splash, loadProgress, progressText);
-		
-		Scene splashScene = new Scene(splashLayout);
-		stage.setHeight(SPLASH_HEIGHT);
-		stage.setWidth(SPLASH_WIDTH);
-		stage.setScene(splashScene);
-		return splashScene;
-	}
-	
-	/*
-	 * Generates the splash screen.
-	 */
-	public void showSplashProgress(Stage stage, Task<?> task, InitCompletionHandler initCompletionHandler) {
-		progressText.textProperty().bind(task.messageProperty());
-		loadProgress.progressProperty().bind(task.progressProperty());
-		task.stateProperty().addListener((observableValue, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                loadProgress.progressProperty().unbind();
-                loadProgress.setProgress(1);
-                stage.toFront();
-               
-                initCompletionHandler.complete();
-            }
-        });
-		
-		stage.show();	
-	}
-	
-	/*
-	 * Creates the ready message for the splash screen.
-	 */
-	public void createReadyMessage() {
-		Label readyLabel = new Label("Press any key to start!");
-		readyLabel.setMinWidth(SPLASH_WIDTH);
-		readyLabel.setMinHeight(SPLASH_HEIGHT-BOTTOM_BORDER);
-		readyLabel.setFont(Font.font("Arial"));
-		readyLabel.setAlignment(Pos.BOTTOM_CENTER);
-        splashLayout.getChildren().add(readyLabel);
-	}
-	
-	/*
-	 * Sets onKeyPressed to begin the game once the player indicates he or she is ready.
-	 */
-	public void waitForPlayerReady(Scene scene, Stage stage) {	
-		createReadyMessage();
-		scene.setOnKeyPressed(
-				new EventHandler<KeyEvent>() {
-					public void handle(KeyEvent e) {
-						FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.2), splashLayout);
-		                fadeSplash.setFromValue(1.0);
-		                fadeSplash.setToValue(0.0);
-		                fadeSplash.setOnFinished(actionEvent -> hideStageAndInitGame(stage));
-		                fadeSplash.play();
-					}
-				});
-	}	
-	
-	/*
-	 * Hides the stage for the splash screen and initializes the game.
-	 */
-	private void hideStageAndInitGame(Stage stage) {
-		stage.hide();
-		if (gameInit == false) {
-			gameInit = true;
-			init(new Stage(), new Game());
-		}
-	}	
-	
-	/*
 	 * Initializes the game.
 	 * @param: stage is the stage on which the game is to be played.
-	 * @param: game is the current game
+	 * @param: newGame is true if a new Game is to be started, false if not
 	 */
-	public void init(Stage stage, Game game) {
+	public void init(Stage stage) {
+		stage.setTitle(TITLE);
 		if (myLevelTimer != null) {
 			myLevelTimer.cancel();
 		}
 		myStage = stage;
-		myGame = game;
 		startLevel(new TableLevel((double) 0), myStage, this);
 		myStage.show();
 	}
@@ -186,7 +78,7 @@ public class Game {
 	public void switchToCustomerLevel() {
 		if (myLevel.isGameOver() == false) {
 			double numStartingFish = myLevel.getSushi().getNumFish();
-			startLevel(new CustomerLevel(numStartingFish), myStage, myGame);
+			startLevel(new CustomerLevel(numStartingFish), myStage, this);
 		}
 	}
 
