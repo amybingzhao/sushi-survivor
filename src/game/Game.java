@@ -1,11 +1,3 @@
-// This entire file is part of my masterpiece.
-// Amy Zhao (abz3)
-
-// For my code masterpiece, I extracted the methods related to the creation and functioning of the splash screen into a separate SplashScreen class
-// (see SplashScreen.java for further explanation of the design).
-
-// Additionally, I modified the init() method in Game such that it no longer requires a Game object as a parameter, which was confusing to read.
-
 package game;
 
 import java.util.Timer;

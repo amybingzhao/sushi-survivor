@@ -1,9 +1,3 @@
-// This entire file is part of my masterpiece.
-// Amy Zhao (abz3)
-
-// The changes in the init() method of the Game class required changes in this class so that the restart button creates a new Game and calls
-// that new Game's init() method rather than passing it a new Game as a parameter.
-
 package game;
 
 import java.util.ArrayList;

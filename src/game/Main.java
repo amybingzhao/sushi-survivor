@@ -1,7 +1,3 @@
-// This entire file is part of my masterpiece.
-// Amy Zhao (abz3)
-// To accommodate for the separation of the Game and SplashScreen classes, this class was also modified.
-
 package game;
 
 import javafx.application.Application;
